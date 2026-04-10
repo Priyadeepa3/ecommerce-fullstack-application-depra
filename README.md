@@ -186,6 +186,28 @@ src/
 ## 📸 Screenshots
 
 (Add UI screenshots here)
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/d9115503-30cc-44d7-a59d-6cc822d3fcfd" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/46dcf78a-0a29-4726-8d7e-5258612a759c" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/953a420f-5774-4c0a-8841-1819ccbe2794" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/c260c0ec-7212-4cdc-b3e8-ca7f5a9df62d" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/a4cb334f-c419-4620-b2b1-4582d251549c" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e68bd86a-8c11-4fc0-97a8-a3c2ca7146f8" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/d073bdb8-b6da-4daf-9552-2a5370060b4c" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/134c6bb9-335d-4880-98e4-fd1a1d70aab0" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/3961521b-0ba0-4069-a8d3-ecc4fbe6e53b" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/5c25bde2-dbc0-4251-bf0d-b03a394e2637" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/a9419bbe-2d2a-4813-8389-520bd2a8b7a5" />
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 
