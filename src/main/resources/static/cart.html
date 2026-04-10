@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEPRA | Your Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFFDD0;
+            color: #2c1e16;
+        }
+        :root {
+            --maroon: #800000;
+            --gold: #D4AF37;
+            --cream: #FFFDD0;
+            --shadow: 0 12px 28px rgba(0,0,0,0.08);
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+        .site-header {
+            background: rgba(255,253,208,0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0.8rem 0;
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.9rem;
+            color: var(--maroon);
+        }
+        .nav-links { display: flex; gap: 1.2rem; }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 600;
+            color: #4a2c22;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--maroon);
+            border-bottom: 2px solid var(--gold);
+        }
+        .auth-icons { display: flex; gap: 0.8rem; }
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--maroon);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-primary:hover {
+            background: #a00000;
+            transform: scale(1.02);
+        }
+        .cart-container {
+            background: white;
+            border-radius: 28px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+        }
+        .cart-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e0cfb0;
+        }
+        .cart-item img {
+            width: 80px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 16px;
+            background: #f5f5f5;
+        }
+        .quantity-input {
+            width: 70px;
+            padding: 0.4rem;
+            border-radius: 30px;
+            text-align: center;
+            border: 1px solid var(--gold);
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--maroon);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .cart-summary {
+            text-align: right;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gold);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--gold);
+            margin-top: 2rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-card {
+            background: white;
+            max-width: 480px;
+            width: 90%;
+            border-radius: 28px;
+            padding: 1.8rem;
+        }
+        @media (max-width: 800px) {
+            .cart-item { grid-template-columns: 1fr; text-align: center; gap: 0.8rem; }
+            .cart-item img { margin: 0 auto; }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo"><h1>DEPRA</h1></div>
+        <div class="nav-links">
+            <a href="/home">Home</a>
+            <a href="/products">Sarees</a>
+            <a href="/cart" class="active">Cart</a>
+            <a href="/orders">Orders</a>
+            <a href="/address">Address</a>
+                <a href="/product-details.html?id=${item.productId}"
+                   style="text-decoration:none; color:inherit;">
+                    <strong>${item.productName}</strong>
+                </a>
+        </div>
+        <div class="auth-icons">
+            <button class="icon-btn" id="authBtn" onclick="openAuthModal()"><i class="far fa-user"></i></button>
+            <button class="icon-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="cart-container">
+        <h2>Your Shopping Bag</h2>
+        <div id="cartItemsList"></div>
+        <div id="cartSummary" class="cart-summary"></div>
+        <button class="btn-primary" id="checkoutBtn" style="margin-top:1rem;" onclick="proceedToCheckout()">Proceed to Checkout</button>
+    </div>
+</main>
+<footer>DEPRA – Where every drape tells a story</footer>
+
+<!-- Auth Modal -->
+<div id="authModal" class="modal">
+    <div class="modal-card">
+        <h3 id="authTitle">Login</h3>
+        <input type="email" id="authEmail" placeholder="Email">
+        <div id="signupNameGroup" style="display:none;"><input type="text" id="authName" placeholder="Full name"></div>
+        <input type="password" id="authPassword" placeholder="Password">
+        <div style="display:flex; gap:1rem;">
+            <button class="btn-primary" id="authActionBtn" onclick="submitAuth()">Login</button>
+            <button class="btn-outline" onclick="toggleAuthMode()">Sign Up</button>
+        </div>
+        <div id="authFeedback"></div>
+        <button onclick="closeAuthModal()">Cancel</button>
+    </div>
+</div>
+
+<script>
+    const TOKEN_KEY = 'jwt_token';
+    function getToken() { return localStorage.getItem(TOKEN_KEY); }
+    function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+    function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+    async function apiFetch(endpoint, options = {}) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` };
+        const res = await fetch(endpoint, { ...options, headers });
+        if (!res.ok) throw new Error(await res.text());
+        return res.json();
+    }
+
+    // Helper to handle broken images
+    function handleImageError(img) {
+        img.src = 'https://placehold.co/600x800?text=No+Image';
+        img.onerror = null;
+    }
+
+    async function loadCart() {
+        if (!getToken()) {
+            document.getElementById('cartItemsList').innerHTML = '<p>Please login to view cart</p>';
+            document.getElementById('cartSummary').innerHTML = '';
+            return;
+        }
+        try {
+            const cart = await apiFetch('/api/cart');
+            const items = cart.items || [];
+            const container = document.getElementById('cartItemsList');
+            if (!items.length) {
+                container.innerHTML = '<p>Your cart is empty</p>';
+                document.getElementById('cartSummary').innerHTML = '';
+                return;
+            }
+            let total = 0;
+            container.innerHTML = items.map(item => {
+                const subtotal = item.subtotal || (item.priceAtTime * item.quantity);
+                total += subtotal;
+                const imgUrl = item.imageUrl || item.productImage || item.image || 'https://placehold.co/600x800?text=Saree';
+                return `
+                    <div class="cart-item">
+                        <img src="${imgUrl}" alt="${item.productName}" onerror="handleImageError(this)">
+                        <div><strong>${item.productName}</strong><br>₹${item.priceAtTime}</div>
+                        <div><input type="number" class="quantity-input" value="${item.quantity}" min="1" onchange="updateQuantity(${item.productId}, this.value)"></div>
+                        <div>₹${subtotal}</div>
+                        <button class="remove-btn" onclick="removeFromCart(${item.productId})"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('cartSummary').innerHTML = `<h3>Total: ₹${total}</h3>`;
+        } catch (e) {
+            document.getElementById('cartItemsList').innerHTML = '<p>Error loading cart</p>';
+        }
+    }
+
+    async function updateQuantity(pid, qty) {
+        try {
+            await apiFetch('/api/cart/update', { method: 'PUT', body: JSON.stringify({ productId: pid, quantity: parseInt(qty) }) });
+            loadCart();
+        } catch (e) { alert('Update failed'); }
+    }
+
+    async function removeFromCart(pid) {
+        if (confirm('Remove this item?')) {
+            try {
+                await apiFetch(`/api/cart/remove/${pid}`, { method: 'DELETE' });
+                loadCart();
+            } catch (e) { alert('Remove failed'); }
+        }
+    }
+
+    function proceedToCheckout() { window.location.href = '/checkout'; }
+
+    // Auth logic (same as before)
+    let authMode = 'login';
+    function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; toggleAuthMode(); }
+    function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+    function toggleAuthMode() {
+        authMode = authMode === 'login' ? 'signup' : 'login';
+        document.getElementById('authTitle').innerText = authMode === 'login' ? 'Login' : 'Sign Up';
+        document.getElementById('authActionBtn').innerText = authMode === 'login' ? 'Login' : 'Sign Up';
+        document.getElementById('signupNameGroup').style.display = authMode === 'signup' ? 'block' : 'none';
+    }
+    async function submitAuth() {
+        const email = document.getElementById('authEmail').value, pass = document.getElementById('authPassword').value;
+        if (authMode === 'signup') {
+            const name = document.getElementById('authName').value;
+            await fetch('/api/users/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password: pass }) });
+            alert('Signup success! Login');
+            toggleAuthMode();
+            return;
+        }
+        const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: pass }) });
+        if (res.ok) {
+            const data = await res.json();
+            setToken(data.accessToken || data.token);
+            alert('Login success');
+            closeAuthModal();
+            location.reload();
+        } else alert('Invalid');
+    }
+    function logout() { clearToken(); location.reload(); }
+
+    window.onload = () => {
+        loadCart();
+        if (getToken()) document.getElementById('authBtn').innerHTML = '<i class="fas fa-user-check"></i>';
+    };
+    window.handleImageError = handleImageError;
+    window.updateQuantity = updateQuantity;
+    window.removeFromCart = removeFromCart;
+    window.proceedToCheckout = proceedToCheckout;
+    window.openAuthModal = openAuthModal;
+    window.closeAuthModal = closeAuthModal;
+    window.toggleAuthMode = toggleAuthMode;
+    window.submitAuth = submitAuth;
+    window.logout = logout;
+</script>
+</body>
+</html>

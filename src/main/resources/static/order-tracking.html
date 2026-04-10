@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track Order | DEPRA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f0e8;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .track-card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #800000;
+        }
+        .order-info {
+            background: #faf7f2;
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .order-number {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+        .order-status-badge {
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        /* Timeline */
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: #e0cfb0;
+            z-index: 0;
+        }
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            background: white;
+        }
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            background: #e0cfb0;
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: 0.2s;
+        }
+        .step-icon.active {
+            background: #800000;
+            color: white;
+            box-shadow: 0 4px 12px rgba(128,0,0,0.3);
+        }
+        .step-icon.completed {
+            background: #2e7d32;
+            color: white;
+        }
+        .step-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .step-date {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 0.2rem;
+        }
+        .delivery-estimate {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f0f0f0;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .address-block {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #faf7f2;
+            border-radius: 20px;
+        }
+        .address-block h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+        .btn {
+            display: inline-block;
+            background: #800000;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            text-decoration: none;
+            margin-top: 1rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 14px rgba(128,0,0,0.2);
+        }
+        @media (max-width: 640px) {
+            body { padding: 1rem; }
+            .step-label { font-size: 0.7rem; }
+            .step-icon { width: 36px; height: 36px; font-size: 1rem; }
+            .timeline::before { top: 18px; left: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="track-card">
+        <h2>🚚 Track Your Order</h2>
+        <div id="trackingContent">Loading...</div>
+        <a href="/orders.html" class="btn">← Back to Orders</a>
+    </div>
+</div>
+
+<script>
+    const TOKEN_KEY = 'jwt_token';
+    function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let orderId = urlParams.get('orderId') || urlParams.get('id');
+
+    if (!orderId || orderId === 'undefined') {
+        document.getElementById('trackingContent').innerHTML = '<p style="color:red;">❌ Missing order ID. Please go to <a href="/orders.html">My Orders</a>.</p>';
+    } else {
+        const token = getToken();
+        if (!token) {
+            document.getElementById('trackingContent').innerHTML = '<p>Please log in to track your order.</p>';
+        } else {
+            fetch(`/api/orders/${orderId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.json())
+            .then(order => {
+                // Define timeline steps (customizable)
+                const steps = [
+                    { key: 'PENDING', label: 'Order Placed', icon: '📦' },
+                    { key: 'CONFIRMED', label: 'Confirmed', icon: '✅' },
+                    { key: 'SHIPPED', label: 'Shipped', icon: '🚚' },
+                    { key: 'OUT_FOR_DELIVERY', label: 'Out for Delivery', icon: '🏍️' },
+                    { key: 'DELIVERED', label: 'Delivered', icon: '🏠' }
+                ];
+                let currentIndex = steps.findIndex(s => s.key === order.status);
+                if (currentIndex === -1) currentIndex = 0;
+
+                const timelineHtml = steps.map((step, idx) => {
+                    let stepClass = '';
+                    if (idx < currentIndex) stepClass = 'completed';
+                    else if (idx === currentIndex) stepClass = 'active';
+                    return `
+                        <div class="step">
+                            <div class="step-icon ${stepClass}">${step.icon}</div>
+                            <div class="step-label">${step.label}</div>
+                            ${idx === currentIndex ? `<div class="step-date">Current</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                // Estimated delivery (example: +5 days from order date)
+                const orderDate = new Date(order.orderDate);
+                const estDelivery = new Date(orderDate);
+                estDelivery.setDate(orderDate.getDate() + 5);
+                const deliveryText = order.status === 'DELIVERED'
+                    ? `Delivered on ${new Date(order.orderDate).toLocaleDateString('en-IN', { day:'numeric', month:'long' })}`
+                    : `Estimated delivery: ${estDelivery.toLocaleDateString('en-IN', { day:'numeric', month:'long' })}`;
+
+                const address = order.shippingAddress || 'No address provided';
+                const paymentMethod = order.paymentMethod || 'Cash on Delivery';
+
+                document.getElementById('trackingContent').innerHTML = `
+                    <div class="order-info">
+                        <span class="order-number">Order #${order.orderId}</span>
+                        <span class="order-status-badge">${order.status}</span>
+                        <span>Placed on ${new Date(order.orderDate).toLocaleDateString()}</span>
+                    </div>
+                    <div class="timeline">
+                        ${timelineHtml}
+                    </div>
+                    <div class="delivery-estimate">
+                        📍 ${deliveryText}
+                    </div>
+                    <div class="address-block">
+                        <h4>Delivery Address</h4>
+                        <p>${escapeHtml(address)}</p>
+                        <h4 style="margin-top: 0.8rem;">Payment Method</h4>
+                        <p>${escapeHtml(paymentMethod)}</p>
+                    </div>
+                    <div style="text-align:center; margin-top:1.5rem;">
+                        <a href="/Order-Summary.html?orderId=${order.orderId}" class="btn" style="background:#D4AF37; color:#2c1e16;">View Full Order Summary</a>
+                    </div>
+                `;
+            })
+            .catch(err => {
+                document.getElementById('trackingContent').innerHTML = `<p style="color:red;">Error loading order: ${err.message}</p>`;
+            });
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m] || m));
+    }
+</script>
+</body>
+</html>

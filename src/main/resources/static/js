@@ -1,0 +1,20 @@
+const REGISTER_URL = '/api/users/register';
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+        name: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+    };
+    try {
+        const res = await fetch(REGISTER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) { /* success message */ }
+        else { /* error message */ }
+    } catch (err) {
+        /* handle fetch error */
+    }
+});

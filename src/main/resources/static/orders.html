@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEPRA | My Orders</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter', sans-serif; background:#FFFDD0; color:#2c1e16; }
+        :root { --maroon:#800000; --gold:#D4AF37; --shadow:0 12px 28px rgba(0,0,0,0.08); }
+        .container { max-width:1280px; margin:0 auto; padding:0 1.5rem; }
+        .site-header { background:rgba(255,253,208,0.96); backdrop-filter:blur(10px); border-bottom:2px solid var(--gold); padding:0.8rem 0; position:sticky; top:0; }
+        .header-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+        .logo h1 { font-family:'Playfair Display', serif; font-size:1.9rem; color:var(--maroon); }
+        .nav-links { display:flex; gap:1.2rem; }
+        .nav-links a { text-decoration:none; font-weight:600; color:#4a2c22; }
+        .nav-links a.active { color:var(--maroon); border-bottom:2px solid var(--gold);}
+        .order-card { background:white; border-radius:24px; padding:1.2rem; margin-bottom:1rem; box-shadow:var(--shadow); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+        .status { padding:0.2rem 0.8rem; border-radius:20px; font-weight:600; }
+        .status.PLACED { background:#fef3c7; color:#b45309; }
+        .status.CONFIRMED { background:#e0f2fe; color:#0369a1; }
+        .status.SHIPPED { background:#dcfce7; color:#15803d; }
+        .status.DELIVERED { background:#f1f5f9; color:#334155; }
+        .btn-sm { background:var(--maroon); color:white; padding:0.4rem 1rem; border-radius:40px; text-decoration:none; }
+        footer { text-align:center; padding:2rem; border-top:1px solid var(--gold); margin-top:2rem; }
+    </style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner">
+    <div class="logo"><h1>DEPRA</h1></div>
+    <div class="nav-links"><a href="/home">Home</a><a href="/products">Sarees</a><a href="/cart">Cart</a><a href="/orders" class="active">Orders</a><a href="/address">Address</a></div>
+</div></header>
+
+<main class="container">
+    <h2>Your Orders</h2>
+    <div id="ordersList"></div>
+</main>
+<footer>DEPRA – Track your elegance</footer>
+
+<script>
+    const TOKEN_KEY='jwt_token';
+    function getToken(){ return localStorage.getItem(TOKEN_KEY); }
+    async function apiFetch(endpoint,options={}){
+        const headers={'Authorization':`Bearer ${getToken()}`};
+        const res=await fetch(endpoint,{...options,headers});
+        if(!res.ok) throw new Error(await res.text());
+        return res.json();
+    }
+    async function loadOrders(){
+        try{
+            const orders=await apiFetch('/api/orders/my-orders');
+            const container=document.getElementById('ordersList');
+            if(!orders.length){
+                container.innerHTML='<p>No orders yet</p>';
+                return;
+            }
+            container.innerHTML=orders.map(o=>`
+                <div class="order-card">
+                    <div>
+                        <strong>Order #${o.orderId}</strong><br>
+                        ${new Date(o.orderDate).toLocaleDateString()}<br>
+                        Total: ₹${o.totalAmount}
+                    </div>
+                    <div><span class="status ${o.status}">${o.status}</span></div>
+                    <div>
+                        <a href="/order-tracking.html?orderId=${o.orderId}" class="btn-sm">Track</a>
+                        <a href="/Order-Summary.html?orderId=${o.orderId}" class="btn-sm">View</a>
+                    </div>
+                </div>
+            `).join('');
+        }catch(e){
+            console.error(e);
+            container.innerHTML='<p>Error loading orders</p>';
+        }
+    }
+    window.onload=()=>{
+        if(!getToken()){
+            alert('Login required');
+            window.location.href='/home';
+        } else {
+            loadOrders();
+        }
+    };
+</script>
+</body>
+</html>

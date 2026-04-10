@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout | Priya Thiru</title>
+    <style>
+        body {
+            font-family: Georgia;
+            background: linear-gradient(to right, #f5e1da, #fff);
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+        h2 {
+            color: #800000;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #800000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Shipping Address</h2>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="text" id="phone" placeholder="Phone Number" required>
+    <textarea id="address" placeholder="Full Address" required></textarea>
+    <input type="text" id="city" placeholder="City" required>
+    <input type="text" id="pincode" placeholder="Pincode" required>
+
+    <h2>Payment Method</h2>
+    <label>
+        <input type="radio" name="payment" value="COD" checked> Cash on Delivery
+    </label><br>
+    <label>
+        <input type="radio" name="payment" value="ONLINE" disabled> Online Payment (Coming Soon)
+    </label>
+
+    <br><br>
+    <button id="placeOrderBtn" onclick="placeOrder()">Place Order</button>
+    <div id="errorMsg" class="error"></div>
+</div>
+
+<script>
+    const TOKEN_KEY = 'jwt_token';
+
+    function getToken() {
+        return localStorage.getItem(TOKEN_KEY);
+    }
+
+    async function placeOrder() {
+        const btn = document.getElementById('placeOrderBtn');
+        const errorDiv = document.getElementById('errorMsg');
+
+        btn.disabled = true;
+        errorDiv.innerText = '';
+
+        // Collect form data
+        const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const pincode = document.getElementById('pincode').value.trim();
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+        if (!name || !phone || !address || !city || !pincode) {
+            errorDiv.innerText = 'Please fill in all shipping details.';
+            btn.disabled = false;
+            return;
+        }
+
+        // Get the JWT token – if missing, user is not logged in
+        const token = getToken();
+        if (!token) {
+            errorDiv.innerText = 'You must be logged in to place an order. Redirecting...';
+            setTimeout(() => { window.location.href = '/login'; }, 1500);
+            btn.disabled = false;
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/orders/place', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`   // 🔑 critical line
+                },
+                body: JSON.stringify({
+                    fullName: name,
+                    phoneNumber: phone,
+                    shippingAddress: address,
+                    city: city,
+                    pincode: pincode,
+                    paymentMethod: paymentMethod
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || `Server responded with ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.orderId) {
+    // Redirect straight to order summary with the real orderId
+    window.location.href = `/Order-Summary.html?orderId=${data.orderId}`;
+} else if (data.id) {
+    window.location.href = `/Order-Summary.html?orderId=${data.id}`;
+} else {
+    alert('Order placed but no ID returned. Check your orders page.');
+    window.location.href = '/orders.html';
+}
+            window.location.href = "/Order-successful";
+
+        } catch (err) {
+            console.error('Order error:', err);
+            errorDiv.innerText = 'Order failed: ' + err.message;
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
