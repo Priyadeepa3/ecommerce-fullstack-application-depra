@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Wishlist | DEPRA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter', sans-serif; background:#FFFDD0; padding:2rem; }
+        .container { max-width:1200px; margin:0 auto; }
+        .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem; }
+        h1 { color:#800000; }
+        .back-btn { background:#800000; color:white; padding:0.5rem 1.2rem; border-radius:40px; text-decoration:none; }
+        .products-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:1.8rem; }
+        .card { background:white; border-radius:24px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.08); transition:transform 0.2s; }
+        .card:hover { transform:translateY(-5px); }
+        .card img { width:100%; aspect-ratio:3/4; object-fit:cover; }
+        .card-content { padding:1rem; }
+        .card h3 { font-size:1rem; margin-bottom:0.5rem; }
+        .price { font-weight:bold; color:#800000; }
+        .mrp { text-decoration:line-through; color:#888; font-size:0.8rem; margin-left:0.5rem; }
+        .actions { display:flex; gap:0.5rem; margin-top:1rem; }
+        .cart-btn, .remove-wishlist { flex:1; border:none; padding:0.5rem; border-radius:40px; cursor:pointer; font-weight:600; }
+        .cart-btn { background:#D4AF37; color:#2c1e16; }
+        .remove-wishlist { background:#eee; color:#800000; }
+        .empty-msg { text-align:center; padding:3rem; background:white; border-radius:28px; }
+        @media (max-width:640px) { .products-grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>❤️ My Wishlist</h1>
+        <a href="/index.html" class="back-btn">Continue Shopping</a>
+    </div>
+    <div id="wishlistContainer" class="products-grid">Loading...</div>
+</div>
+
+<script>
+    const TOKEN_KEY = 'jwt_token';
+    function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+    async function loadWishlist() {
+        const token = getToken();
+        if (!token) {
+            window.location.href = '/login.html';
+            return;
+        }
+        try {
+            const res = await fetch('/api/wishlist', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to load');
+            const products = await res.json();
+            const container = document.getElementById('wishlistContainer');
+            if (!products.length) {
+                container.innerHTML = `<div class="empty-msg"><p>Your wishlist is empty ✨</p><a href="/index.html" class="back-btn" style="display:inline-block; margin-top:1rem;">Explore Sarees</a></div>`;
+                return;
+            }
+            container.innerHTML = products.map(p => `
+                <div class="card" data-product-id="${p.id}">
+                    <img src="${p.imageUrl || 'https://via.placeholder.com/300x400?text=DEPRA'}" alt="${p.name}">
+                    <div class="card-content">
+                        <h3>${escapeHtml(p.name)}</h3>
+                        <div><span class="price">₹${p.currentPrice}</span><span class="mrp">₹${p.mrp}</span></div>
+                        <div class="actions">
+                            <button class="cart-btn" onclick="addToCart(${p.id}, this)">Add to Cart</button>
+                            <button class="remove-wishlist" onclick="removeFromWishlist(${p.id}, this)">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch(err) {
+            document.getElementById('wishlistContainer').innerHTML = '<div class="empty-msg">Error loading wishlist. Please login again.</div>';
+        }
+    }
+
+    async function addToCart(productId, btn) {
+        const token = getToken();
+        if (!token) return window.location.href = '/login.html';
+        try {
+            await fetch('/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${token}` },
+                body: JSON.stringify({ productId, quantity:1 })
+            });
+            alert('Added to cart!');
+            btn.textContent = '✓ Added';
+            setTimeout(() => btn.textContent = 'Add to Cart', 1500);
+        } catch(err) {
+            alert('Could not add to cart');
+        }
+    }
+
+    async function removeFromWishlist(productId, btn) {
+        const token = getToken();
+        if (!token) return;
+        try {
+            await fetch(`/api/wishlist/remove?productId=${productId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const card = btn.closest('.card');
+            card.remove();
+            if (document.querySelectorAll('.card').length === 0) {
+                document.getElementById('wishlistContainer').innerHTML = `<div class="empty-msg"><p>Wishlist is now empty</p><a href="/index.html" class="back-btn" style="display:inline-block;">Shop now</a></div>`;
+            }
+        } catch(err) {
+            alert('Failed to remove');
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    loadWishlist();
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEPRA | My Addresses</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter', sans-serif; background:#FFFDD0; color:#2c1e16; }
+        :root { --maroon:#800000; --gold:#D4AF37; --shadow:0 12px 28px rgba(0,0,0,0.08); }
+        .container { max-width:1280px; margin:0 auto; padding:0 1.5rem; }
+        .site-header { background:rgba(255,253,208,0.96); backdrop-filter:blur(10px); border-bottom:2px solid var(--gold); padding:0.8rem 0; position:sticky; top:0; z-index:1000; }
+        .header-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+        .logo h1 { font-family:'Playfair Display', serif; font-size:1.9rem; color:var(--maroon); }
+        .nav-links { display:flex; gap:1.2rem; }
+        .nav-links a { text-decoration:none; font-weight:600; color:#4a2c22; }
+        .nav-links a.active { color:var(--maroon); border-bottom:2px solid var(--gold);}
+        .btn-primary { background:var(--maroon); color:white; border:none; padding:0.6rem 1.4rem; border-radius:40px; cursor:pointer; }
+        .address-card { background:white; border-radius:24px; padding:1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow); }
+        .form-card { background:white; border-radius:24px; padding:1.5rem; margin-top:1.5rem; }
+        input { width:100%; padding:0.7rem; margin-bottom:1rem; border-radius:20px; border:1px solid #e0cfb0; }
+        footer { text-align:center; padding:2rem; border-top:1px solid var(--gold); margin-top:2rem; }
+    </style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner">
+    <div class="logo"><h1>DEPRA</h1></div>
+    <div class="nav-links"><a href="/home">Home</a><a href="/products">Sarees</a><a href="/cart">Cart</a><a href="/orders">Orders</a><a href="/address" class="active">Address</a></div>
+</div></header>
+
+<main class="container">
+    <h2>Saved Addresses</h2>
+    <div id="addressList"></div>
+
+    <div class="form-card">
+        <h3>Add New Address</h3>
+        <input type="text" id="addrName" placeholder="Full name">
+        <input type="text" id="addrPhone" placeholder="Phone">
+        <input type="text" id="addrStreet" placeholder="Street">
+        <input type="text" id="addrCity" placeholder="City">
+        <input type="text" id="addrState" placeholder="State">
+        <input type="text" id="addrPincode" placeholder="Pincode">
+        <button class="btn-primary" onclick="saveAddress()">Save Address</button>
+    </div>
+</main>
+<footer>DEPRA – Your address, your convenience</footer>
+
+<script>
+    const TOKEN_KEY='jwt_token';
+    function getToken(){ return localStorage.getItem(TOKEN_KEY); }
+    async function apiFetch(endpoint,options={}){ const headers={'Content-Type':'application/json','Authorization':`Bearer ${getToken()}`}; const res=await fetch(endpoint,{...options,headers}); if(!res.ok) throw new Error(await res.text()); return res.json(); }
+    async function loadAddresses(){ try{ const addresses=await apiFetch('/api/address'); const container=document.getElementById('addressList'); if(!addresses.length){ container.innerHTML='<p>No saved addresses</p>'; return; } container.innerHTML=addresses.map(a=>`<div class="address-card"><div><strong>${a.name}</strong><br>${a.street}, ${a.city} ${a.pincode}<br>${a.phone}</div><button class="btn-primary" style="padding:0.4rem 1rem;" onclick="deleteAddress(${a.id})">Delete</button></div>`).join(''); }catch(e){ console.error(e); } }
+    async function saveAddress(){ const payload={ name:document.getElementById('addrName').value, phone:document.getElementById('addrPhone').value, street:document.getElementById('addrStreet').value, city:document.getElementById('addrCity').value, state:document.getElementById('addrState').value, pincode:document.getElementById('addrPincode').value }; if(!payload.name||!payload.phone){ alert('Name and phone required'); return; } try{ await apiFetch('/api/address',{method:'POST',body:JSON.stringify(payload)}); alert('Address saved'); loadAddresses(); document.querySelectorAll('#addrName,#addrPhone,#addrStreet,#addrCity,#addrState,#addrPincode').forEach(i=>i.value=''); }catch(e){ alert(e.message); } }
+    async function deleteAddress(id){ if(confirm('Delete address?')){ try{ await apiFetch(`/api/address/${id}`,{method:'DELETE'}); loadAddresses(); }catch(e){ alert(e.message); } } }
+    window.onload=()=>{ if(!getToken()){ alert('Please login'); window.location.href='/home'; } loadAddresses(); };
+    window.saveAddress=saveAddress; window.deleteAddress=deleteAddress;
+</script>
+</body>
+</html>

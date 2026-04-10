@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEPRA | Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter', sans-serif; background:linear-gradient(135deg,#FFFDD0,#f7e9cf); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+        .signup-card { background:white; width:420px; padding:2rem; border-radius:32px; box-shadow:0 20px 40px rgba(0,0,0,0.1); text-align:center; border-top:6px solid #D4AF37; }
+        input { width:100%; padding:0.8rem; margin:0.6rem 0; border-radius:40px; border:1px solid #e0cfb0; }
+        button { background:#800000; color:white; width:100%; padding:0.8rem; border-radius:40px; border:none; cursor:pointer; }
+        .links { margin-top:1rem; }
+        .links a { color:#800000; }
+    </style>
+</head>
+<body>
+<div class="signup-card">
+    <h1>Create Account</h1>
+    <input type="text" id="name" placeholder="Full name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signup()">Register</button>
+    <div class="links">Already have an account? <a href="/login">Login</a></div>
+    <div id="msg" style="margin-top:1rem;"></div>
+</div>
+<script>
+    async function signup(){ const name=document.getElementById('name').value, email=document.getElementById('email').value, pass=document.getElementById('password').value; const res=await fetch('/api/users/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})}); if(res.ok){ document.getElementById('msg').innerHTML='✅ Registration successful! <a href="/login">Login now</a>'; } else { document.getElementById('msg').innerText='Error signing up'; } }
+</script>
+</body>
+</html>
