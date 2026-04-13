@@ -6,7 +6,6 @@
     <title>DEPRA · Sarees</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root{
@@ -451,7 +450,7 @@
 
         <nav class="nav-links">
             <a href="/home">Home</a>
-            <a href="/products" class="active">Products</a>
+            <a href="/products" class="active">Our Products</a>
             <a href="/cart">Cart</a>
             <a href="/orders">Orders</a>
             <a href="/address">Address</a>
@@ -489,8 +488,10 @@
 
             <div class="filter-group">
                 <h4><i class="fas fa-hands"></i> Material</h4>
-                <div id="materialFilters" class="check-list"></div>
+                <div id="materialFilters" class="pill-group"></div>
             </div>
+
+
 
             <div class="filter-group">
                 <h4><i class="fas fa-indian-rupee-sign"></i> Price (₹)</h4>
@@ -505,7 +506,7 @@
 
             <div class="filter-group">
                 <h4><i class="fas fa-sparkles"></i> Occasion</h4>
-                <div id="occasionFilters" class="check-list"></div>
+                <div id="occasionFilters" class="pill-group"></div>
             </div>
 
             <button class="btn-primary" style="width:100%" onclick="applyFilters()">Apply Filters</button>
@@ -537,18 +538,72 @@
     </div>
 </div>
 
-<script>
+<<script>
     (function(){
-      const TOKEN_KEY='jwt_token';
-      let allProducts=[];
+      const TOKEN_KEY = 'jwt_token';
+      let allProducts = [];
       let selectedColors = new Set();
       let selectedMaterials = new Set();
       let selectedOccasions = new Set();
       let authMode = 'login';
 
+      const colorHexMap = {
+        "Aqua Blue": "#7FDBFF",
+        "Baby Pink": "#FFB6C1",
+        "Black": "#000000",
+        "Blue": "#1E90FF",
+        "Burnt Orange": "#CC5500",
+        "Coffee": "#6F4E37",
+        "Electric Indigo": "#4B0082",
+        "Emerald Green": "#50C878",
+        "Fuchsia": "#FF00FF",
+        "Gold": "#FFD700",
+        "Golden": "#DAA520",
+        "Green": "#008000",
+        "Hot Coral": "#FF6B6B",
+        "Ice Blue": "#99FFFF",
+        "Lavender": "#E6E6FA",
+        "Maroon": "#800000",
+        "Mustard Yellow": "#E1AD01",
+        "Olive Green": "#808000",
+        "Peacock Blue": "#008080",
+        "Pink": "#FFC0CB",
+        "Red": "#FF0000",
+        "Silver": "#C0C0C0",
+        "Turquoise": "#40E0D0",
+        "White": "#FFFFFF"
+      };
+
+      function normalizeText(v){
+        return String(v || '').trim().toLowerCase();
+      }
+
+      function toNumber(v){
+        if (typeof v === 'number') return v;
+        const cleaned = String(v || '').replace(/[^\d.]/g, '');
+        return Number(cleaned) || 0;
+      }
+
+      function getColorHex(colorName){
+        const clean = String(colorName || '').trim();
+        return colorHexMap[clean] || "#d4a373";
+      }
+
       function getToken(){ return localStorage.getItem(TOKEN_KEY); }
       function setToken(t){ localStorage.setItem(TOKEN_KEY, t); }
       function clearToken(){ localStorage.removeItem(TOKEN_KEY); }
+
+      function normalizeProduct(p){
+        return {
+          ...p,
+          price: toNumber(p.price ?? p.salePrice ?? p.amount),
+          mrp: toNumber(p.mrp),
+          color: String(p.color || '').trim(),
+          material: normalizeText(p.material),
+          occasion: normalizeText(p.occasion),
+          name: String(p.name || '')
+        };
+      }
 
       function normalizeImageUrl(url){
         if(!url) return 'https://placehold.co/600x800/ffe1d9/d95d77?text=No+Image';
@@ -556,74 +611,115 @@
         return '/' + url;
       }
 
+      const fallbackProducts = [
+        { id:1, name:'Baby Pink Cotton Daily Kurti', price:1625, mrp:1999, color:'Baby Pink', material:'cotton', occasion:'casual', imageUrl:'https://placehold.co/600x800/FFB6C1/ffffff?text=Baby+Pink' },
+        { id:2, name:'Black Red Designer Blouse', price:1924, mrp:2500, color:'Black', material:'blouse', occasion:'festive', imageUrl:'https://placehold.co/600x800/000000/ffffff?text=Black+Blouse' },
+        { id:3, name:'Blue Golden Embroidery Blouse', price:486, mrp:899, color:'Blue', material:'fabric', occasion:'ethnic', imageUrl:'https://placehold.co/600x800/1E90FF/ffffff?text=Blue+Blouse' }
+      ].map(normalizeProduct);
+
       async function loadProducts(){
         try{
           const res = await fetch('/api/products');
-          if(res.ok) allProducts = await res.json();
-          else throw new Error();
+          if(res.ok){
+            const data = await res.json();
+            allProducts = Array.isArray(data) ? data.map(normalizeProduct) : [];
+          }else{
+            throw new Error('API failed');
+          }
         }catch(e){
-          allProducts = [
-            { id:1, name:'Peach Blossom Silk Saree', price:5499, mrp:12000, color:'#f6c1b6', material:'silk', occasion:'wedding', imageUrl:'https://placehold.co/600x800/ffdad4/d95d77?text=Peach+Silk' },
-            { id:2, name:'Rose Kanchipuram', price:7999, mrp:15000, color:'#f2a7b5', material:'silk', occasion:'festive', imageUrl:'https://placehold.co/600x800/fce4db/c85a6b?text=Rose+Saree' },
-            { id:3, name:'Blush Organza Drape', price:4299, mrp:8900, color:'#ffe3e0', material:'organza', occasion:'party', imageUrl:'https://placehold.co/600x800/ffe1d9/d95d77?text=Blush' },
-            { id:4, name:'Coral Georgette', price:6799, mrp:13500, color:'#f5a29a', material:'georgette', occasion:'festive', imageUrl:'https://placehold.co/600x800/fccac2/c85a6b?text=Coral' }
-          ];
+          allProducts = fallbackProducts;
         }
         renderFilters();
         applyFilters();
       }
 
       function renderFilters(){
-        const colors = [...new Set(allProducts.map(p=>p.color).filter(Boolean))];
-        const materials = [...new Set(allProducts.map(p=>p.material).filter(Boolean))];
-        const occasions = [...new Set(allProducts.map(p=>p.occasion).filter(Boolean))];
+        const colors = [...new Set(allProducts.map(p => p.color).filter(Boolean))];
+        const materials = [...new Set(allProducts.map(p => p.material).filter(Boolean))];
+        const occasions = [...new Set(allProducts.map(p => p.occasion).filter(Boolean))];
 
-        document.getElementById('colorSwatches').innerHTML = colors.map(c =>
-          `<div class="swatch" style="background:${c};" onclick="toggleColor('${c}', this)"></div>`
-        ).join('');
+        const swatchContainer = document.getElementById('colorSwatches');
+        swatchContainer.innerHTML = colors.map(c => {
+          const hex = getColorHex(c);
+          const activeClass = selectedColors.has(c) ? 'active' : '';
+          return `<div class="swatch ${activeClass}" style="background:${hex};" data-color="${c}" onclick="toggleColor('${c}', this)"></div>`;
+        }).join('');
 
-        document.getElementById('materialFilters').innerHTML = materials.map(m =>
-          `<label><input type="checkbox" onchange="toggleMaterial('${m}', this.checked)"> ${m}</label>`
-        ).join('');
+        const materialDiv = document.getElementById('materialFilters');
+        materialDiv.innerHTML = materials.map(m => {
+          const label = m.charAt(0).toUpperCase() + m.slice(1);
+          const activeClass = selectedMaterials.has(m) ? 'active' : '';
+          return `<button type="button" class="filter-pill ${activeClass}" onclick="toggleMaterial('${m}', this)">${label}</button>`;
+        }).join('');
 
-        document.getElementById('occasionFilters').innerHTML = occasions.map(o =>
-          `<label><input type="checkbox" onchange="toggleOccasion('${o}', this.checked)"> ${o}</label>`
-        ).join('');
+        const occasionDiv = document.getElementById('occasionFilters');
+        occasionDiv.innerHTML = occasions.map(o => {
+          const label = o.charAt(0).toUpperCase() + o.slice(1);
+          const activeClass = selectedOccasions.has(o) ? 'active' : '';
+          return `<button type="button" class="filter-pill ${activeClass}" onclick="toggleOccasion('${o}', this)">${label}</button>`;
+        }).join('');
       }
 
       window.toggleColor = function(c, el){
         if(selectedColors.has(c)) selectedColors.delete(c);
         else selectedColors.add(c);
-        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-        if(selectedColors.has(c)) el.classList.add('active');
+        el.classList.toggle('active');
         applyFilters();
       };
 
-      window.toggleMaterial = function(m, checked){
-        checked ? selectedMaterials.add(m) : selectedMaterials.delete(m);
+      window.toggleMaterial = function(m, el){
+        if(selectedMaterials.has(m)) selectedMaterials.delete(m);
+        else selectedMaterials.add(m);
+        el.classList.toggle('active');
         applyFilters();
       };
 
-      window.toggleOccasion = function(o, checked){
-        checked ? selectedOccasions.add(o) : selectedOccasions.delete(o);
+      window.toggleOccasion = function(o, el){
+        if(selectedOccasions.has(o)) selectedOccasions.delete(o);
+        else selectedOccasions.add(o);
+        el.classList.toggle('active');
         applyFilters();
       };
+
+      function syncPriceLabels(){
+        const minEl = document.getElementById('priceMin');
+        const maxEl = document.getElementById('priceMax');
+        const min = toNumber(minEl.value);
+        const max = toNumber(maxEl.value);
+
+        document.getElementById('minVal').innerText = min;
+        document.getElementById('maxVal').innerText = max;
+      }
 
       function applyFilters(){
         let filtered = [...allProducts];
-        const search = document.getElementById('searchInput').value.trim().toLowerCase();
 
-        if(search) filtered = filtered.filter(p => (p.name || '').toLowerCase().includes(search));
-        if(selectedColors.size) filtered = filtered.filter(p => selectedColors.has(p.color));
-        if(selectedMaterials.size) filtered = filtered.filter(p => selectedMaterials.has(p.material));
-        if(selectedOccasions.size) filtered = filtered.filter(p => selectedOccasions.has(p.occasion));
+        const search = normalizeText(document.getElementById('searchInput').value);
+        const min = toNumber(document.getElementById('priceMin').value);
+        const max = toNumber(document.getElementById('priceMax').value);
 
-        const min = parseInt(document.getElementById('priceMin').value, 10);
-        const max = parseInt(document.getElementById('priceMax').value, 10);
-        document.getElementById('minVal').innerText = min;
-        document.getElementById('maxVal').innerText = max;
+        syncPriceLabels();
+
+        if(search){
+          filtered = filtered.filter(p =>
+            normalizeText(p.name).includes(search)
+          );
+        }
+
+        if(selectedColors.size){
+          filtered = filtered.filter(p => selectedColors.has(p.color));
+        }
+
+        if(selectedMaterials.size){
+          filtered = filtered.filter(p => selectedMaterials.has(normalizeText(p.material)));
+        }
+
+        if(selectedOccasions.size){
+          filtered = filtered.filter(p => selectedOccasions.has(normalizeText(p.occasion)));
+        }
 
         filtered = filtered.filter(p => p.price >= min && p.price <= max);
+
         renderProducts(filtered);
       }
 
@@ -631,16 +727,20 @@
         const grid = document.getElementById('productGrid');
 
         if(!prods.length){
-          grid.innerHTML = `<div class="empty-state">🌸 No sarees match your filters. Try softening the search.</div>`;
+          grid.innerHTML = `<div class="empty-state">No products match your filters. Try fewer filters.</div>`;
           return;
         }
 
         grid.innerHTML = prods.map(p => {
           const imageUrl = normalizeImageUrl(p.imageUrl);
+          const colorHex = getColorHex(p.color);
+          const labelMaterial = p.material ? p.material.charAt(0).toUpperCase() + p.material.slice(1) : 'Fabric';
+          const labelOccasion = p.occasion ? p.occasion.charAt(0).toUpperCase() + p.occasion.slice(1) : 'New';
+
           return `
             <div class="product-card">
               <div class="product-img-wrap">
-                <span class="badge">${p.occasion || 'New'}</span>
+                <span class="badge">${labelOccasion}</span>
                 <img class="product-img"
                      src="${imageUrl}"
                      onerror="this.onerror=null;this.src='https://placehold.co/600x800/ffe1d9/d95d77?text=Image+Error'"
@@ -649,8 +749,8 @@
               <div class="product-info">
                 <h4>${p.name}</h4>
                 <div class="meta">
-                  <span class="chip">${p.material || 'fabric'}</span>
-                  <span class="chip">${p.color || 'color'}</span>
+                  <span class="chip">${labelMaterial}</span>
+                  <span class="chip" style="background:${colorHex}18; border:1px solid ${colorHex};">${p.color || 'Color'}</span>
                 </div>
                 <div class="price-row">
                   <span class="price">₹${p.price}</span>
@@ -754,12 +854,33 @@
       };
 
       window.applyFilters = applyFilters;
+
       window.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('priceMin').addEventListener('input', applyFilters);
-        document.getElementById('priceMax').addEventListener('input', applyFilters);
-        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        const minRange = document.getElementById('priceMin');
+        const maxRange = document.getElementById('priceMax');
+        const searchInput = document.getElementById('searchInput');
+
+        minRange.addEventListener('input', () => {
+          if(toNumber(minRange.value) > toNumber(maxRange.value)){
+            maxRange.value = minRange.value;
+          }
+          applyFilters();
+        });
+
+        maxRange.addEventListener('input', () => {
+          if(toNumber(maxRange.value) < toNumber(minRange.value)){
+            minRange.value = maxRange.value;
+          }
+          applyFilters();
+        });
+
+        searchInput.addEventListener('input', applyFilters);
+
         loadProducts();
-        if(getToken()) document.getElementById('authBtn').innerHTML = '<i class="fas fa-user-check"></i>';
+
+        if(getToken()){
+          document.getElementById('authBtn').innerHTML = '<i class="fas fa-user-check"></i>';
+        }
       });
     })();
 </script>
