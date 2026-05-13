@@ -9,7 +9,7 @@ public class dbTest {
 
         String url = "jdbc:mysql://depra-ecommerce31-priyathiru333-0b1e.e.aivencloud.com:24871/defaultdb?sslMode=REQUIRED";
         String user = "avnadmin";
-        String password = "AVNS_1KYmqL_2XJe4rMQcg-C";
+        String password = System.getenv("DB_PASSWORD");
 
         Connection conn = DriverManager.getConnection(url, user, password);
 
