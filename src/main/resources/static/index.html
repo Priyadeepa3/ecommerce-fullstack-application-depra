@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DEPRA | Timeless Elegance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --bg: #fbf3eb;
+          --paper: rgba(255, 249, 243, 0.88);
+          --card: #fff8f2;
+          --text: #2d1f1a;
+          --muted: #7d6256;
+          --coffee: #6d3f2a;
+          --coffee-deep: #4a2417;
+          --peach: #f4b39c;
+          --rose: #d97a92;
+          --rose-deep: #b85f78;
+          --gold: #caa56a;
+          --line: rgba(109, 63, 42, 0.14);
+          --shadow: 0 18px 45px rgba(68, 39, 24, 0.10);
+          --shadow-soft: 0 10px 24px rgba(68, 39, 24, 0.08);
+          --radius-xl: 34px;
+          --radius-lg: 24px;
+          --radius-md: 18px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+          font-family: 'Cormorant Garamond', serif;
+          color: var(--text);
+          background:
+            radial-gradient(circle at top left, rgba(244, 179, 156, 0.28), transparent 28%),
+            radial-gradient(circle at top right, rgba(217, 122, 146, 0.16), transparent 26%),
+            linear-gradient(180deg, #fffaf6 0%, var(--bg) 40%, #f6e8db 100%);
+          min-height: 100vh;
+          overflow-x: hidden;
+        }
+
+        body::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0.18;
+          background-image:
+            linear-gradient(rgba(109, 63, 42, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(109, 63, 42, 0.03) 1px, transparent 1px);
+          background-size: 28px 28px;
+          mask-image: radial-gradient(circle at center, black 45%, transparent 95%);
+        }
+
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; }
+        button, input { font: inherit; }
+
+        .container {
+          width: min(1280px, calc(100% - 2rem));
+          margin: 0 auto;
+        }
+
+        .top-strip {
+          background: linear-gradient(90deg, rgba(109, 63, 42, 0.98), rgba(184, 95, 120, 0.95));
+          color: #fff8f2;
+          text-align: center;
+          padding: 0.75rem 1rem;
+          font-size: 1rem;
+          letter-spacing: 0.3px;
+          font-family: 'Inter', sans-serif;
+        }
+
+        .top-strip strong { color: #ffe2ba; }
+
+        .header {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          backdrop-filter: blur(18px);
+          background: rgba(255, 250, 246, 0.82);
+          border-bottom: 1px solid rgba(109, 63, 42, 0.12);
+          box-shadow: 0 10px 30px rgba(77, 44, 27, 0.06);
+        }
+
+        .nav-row {
+          min-height: 92px;
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.9rem 0;
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 0.85rem;
+          min-width: fit-content;
+          cursor: pointer;
+        }
+
+        .brand-mark {
+          width: 54px;
+          height: 54px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          color: #fff8f2;
+          font-size: 1.65rem;
+          font-weight: 800;
+          font-family: 'Playfair Display', serif;
+          background: radial-gradient(circle at 30% 30%, #f6d8b5, #c57a52 45%, #6d3f2a 100%);
+          box-shadow: 0 8px 18px rgba(109, 63, 42, 0.20);
+          border: 1px solid rgba(255,255,255,0.28);
+        }
+
+        .brand-text h1 {
+          font-family: 'Playfair Display', serif;
+          font-size: 2rem;
+          color: var(--coffee-deep);
+          letter-spacing: 2.5px;
+          line-height: 1;
+        }
+
+        .brand-text p {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.72rem;
+          color: var(--muted);
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          margin-top: 0.2rem;
+        }
+
+        .nav-center {
+          display: grid;
+          gap: 0.85rem;
+          width: 100%;
+          padding: 0 1rem;
+        }
+
+        .search-bar {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          background: rgba(255,255,255,0.92);
+          border: 1px solid rgba(109,63,42,0.12);
+          border-radius: 999px;
+          padding: 0.55rem 0.75rem 0.55rem 1rem;
+          box-shadow: var(--shadow-soft);
+        }
+
+        .search-bar input {
+          flex: 1;
+          border: 0;
+          outline: none;
+          background: transparent;
+          color: var(--coffee-deep);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.95rem;
+          min-width: 0;
+        }
+
+        .search-bar input::placeholder { color: #9a8376; }
+
+        .search-btn {
+          border: 0;
+          cursor: pointer;
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, var(--coffee), var(--rose-deep));
+          color: #fff;
+          display: grid;
+          place-items: center;
+          flex: 0 0 auto;
+          box-shadow: 0 8px 18px rgba(109,63,42,0.16);
+        }
+
+        .search-hints {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+        }
+
+        .hint-chip {
+          padding: 0.4rem 0.7rem;
+          border-radius: 999px;
+          background: rgba(217,122,146,0.10);
+          border: 1px solid rgba(184,95,120,0.12);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.76rem;
+          color: var(--coffee-deep);
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+
+        .hint-chip:hover { transform: translateY(-1px); background: rgba(217,122,146,0.16); }
+
+        .nav-links {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0.3rem;
+          flex-wrap: wrap;
+        }
+
+        .nav-links a {
+          position: relative;
+          padding: 0.72rem 0.95rem;
+          font-family: 'Inter', sans-serif;
+          font-size: 0.94rem;
+          font-weight: 700;
+          color: var(--coffee-deep);
+          border-radius: 999px;
+          transition: 0.22s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+          background: rgba(217, 122, 146, 0.12);
+          color: var(--rose-deep);
+        }
+
+        .nav-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.7rem;
+          min-width: fit-content;
+        }
+
+        .pill-toggle {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          padding: 0.35rem;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.76);
+          border: 1px solid rgba(109, 63, 42, 0.12);
+          box-shadow: var(--shadow-soft);
+        }
+
+        .btn {
+          border: 0;
+          cursor: pointer;
+          transition: 0.22s ease;
+          border-radius: 999px;
+          padding: 0.8rem 1.15rem;
+          font-weight: 700;
+          font-family: 'Inter', sans-serif;
+          letter-spacing: 0.2px;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+
+        .btn-ghost {
+          background: transparent;
+          color: var(--coffee-deep);
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, var(--coffee), var(--rose-deep));
+          color: #fffaf6;
+          box-shadow: 0 10px 18px rgba(109, 63, 42, 0.18);
+        }
+
+        .btn-outline {
+          background: transparent;
+          color: var(--rose-deep);
+          border: 1px solid rgba(184, 95, 120, 0.35);
+        }
+
+        .btn-soft {
+          background: rgba(217, 122, 146, 0.10);
+          color: var(--coffee-deep);
+          border: 1px solid rgba(109, 63, 42, 0.10);
+        }
+
+        .icon-btn {
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          background: rgba(255,255,255,0.9);
+          border: 1px solid rgba(109,63,42,0.12);
+          box-shadow: var(--shadow-soft);
+          cursor: pointer;
+          color: var(--coffee-deep);
+          transition: 0.2s ease;
+        }
+        .icon-btn:hover { transform: translateY(-2px); }
+
+        .menu-btn {
+          display: none;
+          width: 46px;
+          height: 46px;
+          place-items: center;
+          border-radius: 50%;
+          border: 1px solid rgba(109, 63, 42, 0.12);
+          background: rgba(255,255,255,0.75);
+          box-shadow: var(--shadow-soft);
+          cursor: pointer;
+        }
+
+        .menu-btn span,
+        .menu-btn span::before,
+        .menu-btn span::after {
+          content: "";
+          display: block;
+          width: 18px;
+          height: 2px;
+          background: var(--coffee-deep);
+          border-radius: 999px;
+          position: relative;
+        }
+        .menu-btn span::before { position: absolute; top: -6px; }
+        .menu-btn span::after { position: absolute; top: 6px; }
+
+        .mobile-panel {
+          display: none;
+          padding: 0 0 1rem;
+        }
+        .mobile-panel.open { display: block; }
+        .mobile-panel .nav-links,
+        .mobile-panel .nav-actions,
+        .mobile-panel .nav-center {
+          justify-content: flex-start;
+          flex-direction: column;
+          align-items: stretch;
+          padding: 0;
+        }
+        .mobile-panel .search-bar,
+        .mobile-panel .pill-toggle,
+        .mobile-panel .icon-btn,
+        .mobile-panel .btn,
+        .mobile-panel .nav-links a {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .hero {
+          position: relative;
+          overflow: hidden;
+          margin: 1.25rem 0 2rem;
+          border-radius: 40px;
+          min-height: 620px;
+          background:
+            linear-gradient(135deg, rgba(255, 248, 243, 0.92), rgba(249, 230, 221, 0.82)),
+            radial-gradient(circle at 15% 20%, rgba(217,122,146,0.18), transparent 22%),
+            radial-gradient(circle at 85% 25%, rgba(244,179,156,0.25), transparent 22%),
+            linear-gradient(135deg, #fff7f1, #f7e6da);
+          border: 1px solid rgba(109, 63, 42, 0.11);
+          box-shadow: var(--shadow);
+        }
+
+        .hero::before,
+        .hero::after {
+          content: "";
+          position: absolute;
+          inset: auto;
+          border-radius: 50%;
+          filter: blur(4px);
+          pointer-events: none;
+        }
+
+        .hero::before {
+          width: 340px;
+          height: 340px;
+          top: -120px;
+          right: -90px;
+          background: radial-gradient(circle, rgba(217,122,146,0.36), transparent 70%);
+        }
+
+        .hero::after {
+          width: 420px;
+          height: 420px;
+          bottom: -180px;
+          left: -150px;
+          background: radial-gradient(circle, rgba(109,63,42,0.16), transparent 68%);
+        }
+
+        .hero-grid {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1.2fr 0.9fr;
+          gap: 2rem;
+          min-height: 620px;
+          padding: 2.2rem;
+          align-items: center;
+        }
+
+        .eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.55rem;
+          padding: 0.45rem 0.95rem;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.65);
+          border: 1px solid rgba(109,63,42,0.10);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.86rem;
+          color: var(--muted);
+          box-shadow: var(--shadow-soft);
+        }
+
+        .eyebrow-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, var(--rose-deep), var(--gold));
+        }
+
+        .hero h2 {
+          margin-top: 1rem;
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(3rem, 6vw, 5.4rem);
+          line-height: 0.95;
+          color: var(--coffee-deep);
+          letter-spacing: -1.2px;
+          max-width: 10ch;
+        }
+
+        .hero h2 em {
+          font-style: normal;
+          color: var(--rose-deep);
+        }
+
+        .hero-copy {
+          margin-top: 1.2rem;
+          font-size: 1.35rem;
+          line-height: 1.55;
+          color: var(--muted);
+          max-width: 58ch;
+        }
+
+        .hero-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.85rem;
+          margin-top: 1.7rem;
+        }
+
+        .hero-meta {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 0.9rem;
+          margin-top: 2rem;
+          max-width: 640px;
+        }
+
+        .meta-card {
+          padding: 1rem 1.1rem;
+          border-radius: 20px;
+          background: rgba(255,255,255,0.58);
+          border: 1px solid rgba(109,63,42,0.09);
+          box-shadow: var(--shadow-soft);
+        }
+
+        .meta-card strong {
+          display: block;
+          font-family: 'Playfair Display', serif;
+          color: var(--coffee-deep);
+          font-size: 1.2rem;
+          margin-bottom: 0.15rem;
+        }
+
+        .meta-card span {
+          font-family: 'Inter', sans-serif;
+          color: var(--muted);
+          font-size: 0.9rem;
+          line-height: 1.35;
+        }
+
+        .hero-art {
+          position: relative;
+          min-height: 520px;
+          border-radius: 34px;
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.16)),
+            linear-gradient(135deg, rgba(109,63,42,0.92), rgba(184,95,120,0.82));
+          box-shadow: 0 24px 60px rgba(68, 39, 24, 0.16);
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.18);
+          isolation: isolate;
+        }
+
+        .hero-art::before {
+          content: "";
+          position: absolute;
+          inset: 18px;
+          border-radius: 28px;
+          border: 1px solid rgba(255,255,255,0.20);
+        }
+
+        .saree-sculpture {
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 35% 18%, rgba(255, 240, 230, 0.55), transparent 16%),
+            radial-gradient(circle at 72% 23%, rgba(255, 229, 214, 0.25), transparent 12%),
+            radial-gradient(circle at 50% 60%, rgba(248, 211, 192, 0.18), transparent 20%);
+        }
+
+        .silhouette {
+          position: absolute;
+          width: 280px;
+          height: 430px;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -45%);
+          filter: drop-shadow(0 18px 18px rgba(0,0,0,0.14));
+        }
+
+        .silhouette .head {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 84px;
+          height: 84px;
+          border-radius: 50%;
+          transform: translateX(-50%);
+          background: radial-gradient(circle at 40% 35%, #ffd7c6, #d69b7b 72%, #9a6345 100%);
+          box-shadow: inset 0 -10px 24px rgba(0,0,0,0.14);
+        }
+
+        .silhouette .body {
+          position: absolute;
+          top: 74px;
+          left: 50%;
+          width: 180px;
+          height: 310px;
+          transform: translateX(-50%);
+          background: linear-gradient(180deg, #f6d3bf, #d97a92 40%, #8e3f52 100%);
+          clip-path: polygon(50% 0%, 67% 8%, 81% 20%, 92% 35%, 100% 54%, 84% 62%, 75% 100%, 25% 100%, 16% 62%, 0% 54%, 8% 35%, 19% 20%, 33% 8%);
+          box-shadow: inset 0 18px 26px rgba(255,255,255,0.12);
+        }
+
+        .silhouette .drape {
+          position: absolute;
+          left: 10%;
+          top: 120px;
+          width: 210px;
+          height: 270px;
+          background:
+            linear-gradient(135deg, rgba(255,255,255,0.10), transparent 40%),
+            repeating-linear-gradient(45deg, rgba(255, 229, 214, 0.45) 0 8px, rgba(244, 179, 156, 0.40) 8px 16px);
+          clip-path: polygon(0 0, 100% 6%, 82% 100%, 12% 100%);
+          border-radius: 22px;
+          transform: rotate(-10deg);
+          opacity: 0.95;
+        }
+
+        .silhouette .arm {
+          position: absolute;
+          background: linear-gradient(180deg, #ffd7c6, #c07a5f);
+          border-radius: 999px;
+          transform-origin: top center;
+        }
+
+        .arm.left { width: 24px; height: 150px; left: 34px; top: 104px; transform: rotate(-25deg); }
+        .arm.right { width: 24px; height: 140px; right: 36px; top: 108px; transform: rotate(28deg); }
+
+        .silhouette .hand {
+          position: absolute;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: radial-gradient(circle at 35% 35%, #ffd7c6, #bc7a5e 75%);
+          bottom: 92px;
+          box-shadow: 0 8px 14px rgba(0,0,0,0.14);
+        }
+        .hand.left { left: 16px; }
+        .hand.right { right: 18px; }
+
+        .hero-badge {
+          position: absolute;
+          right: 18px;
+          bottom: 18px;
+          max-width: 220px;
+          padding: 1rem 1rem 0.95rem;
+          border-radius: 20px;
+          background: rgba(255,255,255,0.14);
+          border: 1px solid rgba(255,255,255,0.16);
+          color: #fff7f1;
+          font-family: 'Inter', sans-serif;
+          backdrop-filter: blur(8px);
+        }
+
+        .hero-badge strong {
+          display: block;
+          margin-bottom: 0.25rem;
+          font-size: 1rem;
+          letter-spacing: 0.3px;
+        }
+
+        .hero-badge span {
+          font-size: 0.88rem;
+          line-height: 1.45;
+          opacity: 0.95;
+        }
+
+        .section {
+          margin: 2rem 0 3rem;
+        }
+
+        .section-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          gap: 1rem;
+          margin-bottom: 1.2rem;
+          flex-wrap: wrap;
+        }
+
+        .section-head h3 {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(2rem, 3vw, 3rem);
+          color: var(--coffee-deep);
+          line-height: 1.05;
+        }
+
+        .section-head p {
+          font-family: 'Inter', sans-serif;
+          color: var(--muted);
+          max-width: 58ch;
+          line-height: 1.5;
+        }
+
+        .category-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.7rem;
+          margin: 1rem 0 1.4rem;
+        }
+
+        .chip {
+          padding: 0.72rem 1rem;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.74);
+          border: 1px solid rgba(109,63,42,0.09);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.92rem;
+          color: var(--coffee-deep);
+          box-shadow: var(--shadow-soft);
+          cursor: pointer;
+        }
+
+        .product-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 1.2rem;
+        }
+
+        .product-card {
+          background: linear-gradient(180deg, rgba(255,255,255,0.90), rgba(255,248,244,0.92));
+          border-radius: 28px;
+          overflow: hidden;
+          border: 1px solid rgba(109,63,42,0.10);
+          box-shadow: var(--shadow-soft);
+          transition: 0.25s ease;
+          position: relative;
+        }
+
+        .product-card:hover {
+          transform: translateY(-6px);
+          box-shadow: var(--shadow);
+        }
+
+        .product-media {
+          position: relative;
+          aspect-ratio: 3 / 4;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 24%),
+            linear-gradient(135deg, #f6c7b4, #d97a92 50%, #7c3f56 100%);
+        }
+
+        .product-media img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          mix-blend-mode: multiply;
+          opacity: 0.92;
+        }
+
+        .product-tag {
+          position: absolute;
+          top: 14px;
+          left: 14px;
+          padding: 0.45rem 0.75rem;
+          border-radius: 999px;
+          background: rgba(255, 248, 243, 0.84);
+          color: var(--coffee-deep);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.76rem;
+          font-weight: 700;
+          border: 1px solid rgba(109,63,42,0.08);
+        }
+
+        .product-info {
+          padding: 1rem 1rem 1.1rem;
+        }
+
+        .product-info h4 {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.35rem;
+          color: var(--coffee-deep);
+          line-height: 1.1;
+          margin-bottom: 0.35rem;
+        }
+
+        .product-info p {
+          font-family: 'Inter', sans-serif;
+          color: var(--muted);
+          font-size: 0.92rem;
+          line-height: 1.45;
+          min-height: 42px;
+        }
+
+        .price-row {
+          display: flex;
+          align-items: baseline;
+          gap: 0.5rem;
+          margin-top: 0.85rem;
+        }
+
+        .price {
+          font-family: 'Inter', sans-serif;
+          font-size: 1.12rem;
+          font-weight: 800;
+          color: var(--rose-deep);
+        }
+
+        .old-price {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.9rem;
+          color: #a98b7a;
+          text-decoration: line-through;
+        }
+
+        .card-actions {
+          display: flex;
+          gap: 0.6rem;
+          margin-top: 1rem;
+        }
+
+        .btn-sm { padding: 0.7rem 0.95rem; font-size: 0.87rem; flex: 1; }
+
+        .story-section {
+          display: grid;
+          grid-template-columns: 1.02fr 0.98fr;
+          gap: 1.2rem;
+          align-items: stretch;
+          margin: 1rem 0 3rem;
+        }
+
+        .story-card {
+          border-radius: 30px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,247,241,0.88));
+          border: 1px solid rgba(109,63,42,0.10);
+          box-shadow: var(--shadow-soft);
+          padding: 1.5rem;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .story-card::after {
+          content: "";
+          position: absolute;
+          inset: auto -60px -70px auto;
+          width: 220px;
+          height: 220px;
+          background: radial-gradient(circle, rgba(217,122,146,0.15), transparent 70%);
+          border-radius: 50%;
+          pointer-events: none;
+        }
+
+        .story-card h4 {
+          font-family: 'Playfair Display', serif;
+          font-size: 2rem;
+          color: var(--coffee-deep);
+          margin-bottom: 0.8rem;
+        }
+
+        .story-card p {
+          font-family: 'Inter', sans-serif;
+          color: var(--muted);
+          line-height: 1.8;
+          margin-bottom: 0.9rem;
+        }
+
+        .quote-box {
+          margin-top: 1rem;
+          padding: 1rem 1.1rem;
+          border-left: 4px solid var(--rose-deep);
+          background: rgba(217,122,146,0.08);
+          border-radius: 18px;
+          font-size: 1.05rem;
+          color: var(--coffee-deep);
+        }
+
+        .tamil-lines {
+          display: grid;
+          gap: 0.75rem;
+          margin-top: 1rem;
+        }
+
+        .tamil-pill {
+          padding: 0.95rem 1rem;
+          border-radius: 18px;
+          background: rgba(255,255,255,0.76);
+          border: 1px solid rgba(109,63,42,0.09);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.95rem;
+          color: var(--coffee-deep);
+          line-height: 1.55;
+        }
+
+        .tamil-pill strong { color: var(--rose-deep); }
+
+        .about-panel {
+          display: grid;
+          grid-template-rows: auto 1fr auto;
+          gap: 1rem;
+          border-radius: 30px;
+          padding: 1.5rem;
+          background: linear-gradient(135deg, rgba(109,63,42,0.95), rgba(184,95,120,0.84));
+          color: #fff9f4;
+          box-shadow: 0 24px 50px rgba(68, 39, 24, 0.18);
+          overflow: hidden;
+          position: relative;
+        }
+
+        .about-panel::before {
+          content: "";
+          position: absolute;
+          inset: 20px;
+          border: 1px solid rgba(255,255,255,0.18);
+          border-radius: 24px;
+          pointer-events: none;
+        }
+
+        .about-panel h4 {
+          font-family: 'Playfair Display', serif;
+          font-size: 2rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .about-panel p,
+        .about-panel li,
+        .about-panel small {
+          font-family: 'Inter', sans-serif;
+          position: relative;
+          z-index: 1;
+        }
+
+        .about-panel p {
+          line-height: 1.8;
+          opacity: 0.96;
+        }
+
+        .about-panel ul {
+          list-style: none;
+          display: grid;
+          gap: 0.7rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .about-panel li {
+          padding-left: 1.25rem;
+          position: relative;
+          line-height: 1.55;
+        }
+
+        .about-panel li::before {
+          content: "✦";
+          position: absolute;
+          left: 0;
+          color: #ffe3bf;
+        }
+
+        .service-strip {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 1rem;
+          margin: 1rem 0 3rem;
+        }
+
+        .service-card {
+          background: rgba(255,255,255,0.76);
+          border: 1px solid rgba(109,63,42,0.10);
+          border-radius: 22px;
+          padding: 1rem;
+          box-shadow: var(--shadow-soft);
+          font-family: 'Inter', sans-serif;
+        }
+
+        .service-card strong {
+          display: block;
+          color: var(--coffee-deep);
+          margin-bottom: 0.35rem;
+        }
+
+        .service-card span {
+          color: var(--muted);
+          font-size: 0.9rem;
+          line-height: 1.45;
+        }
+
+        .footer {
+          margin-top: 2rem;
+          padding: 2rem 0 2.5rem;
+          text-align: center;
+          color: var(--muted);
+          font-family: 'Inter', sans-serif;
+          font-size: 0.92rem;
+          border-top: 1px solid rgba(109,63,42,0.12);
+        }
+
+        .modal {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(24, 12, 8, 0.58);
+          align-items: center;
+          justify-content: center;
+          z-index: 300;
+          padding: 1rem;
+        }
+
+        .modal-card {
+          width: min(560px, 100%);
+          border-radius: 30px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,244,0.96));
+          box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+          border: 1px solid rgba(109,63,42,0.12);
+          padding: 1.4rem;
+        }
+
+        .modal-head {
+          display: flex;
+          align-items: start;
+          justify-content: space-between;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .modal-card h3 {
+          font-family: 'Playfair Display', serif;
+          font-size: 2rem;
+          color: var(--coffee-deep);
+          line-height: 1.05;
+        }
+
+        .modal-card p {
+          font-family: 'Inter', sans-serif;
+          color: var(--muted);
+          margin-top: 0.35rem;
+          line-height: 1.5;
+        }
+
+        .close-btn {
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          border: 1px solid rgba(109,63,42,0.12);
+          background: rgba(255,255,255,0.8);
+          cursor: pointer;
+          font-size: 1.2rem;
+          color: var(--coffee-deep);
+        }
+
+        .field-grid {
+          display: grid;
+          gap: 0.75rem;
+          margin-top: 0.5rem;
+        }
+
+        .field-grid input,
+        .field-grid textarea {
+          width: 100%;
+          padding: 0.95rem 1rem;
+          border-radius: 16px;
+          border: 1px solid rgba(109,63,42,0.14);
+          outline: none;
+          background: #fff;
+          transition: 0.2s ease;
+          font-family: 'Inter', sans-serif;
+          resize: vertical;
+        }
+
+        .field-grid input:focus,
+        .field-grid textarea:focus {
+          border-color: rgba(184,95,120,0.5);
+          box-shadow: 0 0 0 4px rgba(217,122,146,0.12);
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 0.7rem;
+          margin-top: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .feedback {
+          margin-top: 0.8rem;
+          font-family: 'Inter', sans-serif;
+          font-size: 0.92rem;
+          color: var(--rose-deep);
+          min-height: 1.2em;
+        }
+
+        .profile-details {
+          display: grid;
+          gap: 0.75rem;
+          margin-top: 1rem;
+          font-family: 'Inter', sans-serif;
+          color: var(--coffee-deep);
+        }
+
+        .saved-box {
+          margin-top: 1rem;
+          padding: 1rem;
+          border-radius: 18px;
+          background: rgba(217,122,146,0.08);
+          border: 1px solid rgba(184,95,120,0.12);
+          font-family: 'Inter', sans-serif;
+          color: var(--coffee-deep);
+          line-height: 1.55;
+          max-height: 200px;
+          overflow-y: auto;
+        }
+
+        .address-item {
+          padding: 0.5rem 0;
+          border-bottom: 1px solid rgba(109,63,42,0.1);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .address-item button {
+          background: none;
+          border: none;
+          color: var(--rose-deep);
+          cursor: pointer;
+          font-size: 0.8rem;
+        }
+
+        .empty-state {
+          grid-column: 1 / -1;
+          padding: 1.4rem;
+          border-radius: 24px;
+          background: rgba(255,255,255,0.8);
+          border: 1px dashed rgba(109,63,42,0.18);
+          text-align: center;
+          color: var(--muted);
+          font-family: 'Inter', sans-serif;
+        }
+
+        @media (max-width: 1100px) {
+          .nav-row { grid-template-columns: auto 1fr auto; }
+          .nav-links { display: none; }
+          .menu-btn { display: grid; }
+          .hero-grid, .story-section, .service-strip, .product-grid { grid-template-columns: 1fr 1fr; }
+          .hero { min-height: auto; }
+          .hero-grid { padding: 1.4rem; }
+          .hero-art { min-height: 500px; }
+        }
+
+        @media (max-width: 760px) {
+          .container { width: min(100% - 1rem, 1280px); }
+          .nav-row { grid-template-columns: auto auto; }
+          .nav-center, .nav-actions { display: none; }
+          .brand-text h1 { font-size: 1.75rem; }
+          .hero-grid, .story-section, .service-strip, .product-grid { grid-template-columns: 1fr; }
+          .hero h2 { max-width: 100%; }
+          .hero-meta { grid-template-columns: 1fr; }
+          .hero-art { min-height: 430px; }
+          .silhouette { transform: translate(-50%, -46%) scale(0.88); }
+          .mobile-only { display: block; }
+        }
+
+        @media (max-width: 520px) {
+          .top-strip { font-size: 0.88rem; }
+          .hero { border-radius: 28px; }
+          .hero-grid { padding: 1rem; }
+          .hero h2 { font-size: clamp(2.5rem, 12vw, 4rem); }
+          .hero-copy { font-size: 1.12rem; }
+          .product-info h4 { font-size: 1.18rem; }
+          .story-card, .about-panel, .modal-card { border-radius: 24px; }
+          .modal-actions .btn, .hero-actions .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="top-strip">
+    <strong>New Season:</strong> Coffee-kissed silks, pink-peach drapes, and bold women energy — woven for the modern queen.
+</div>
+
+<header class="header">
+    <div class="container nav-row">
+        <a class="brand" href="/home" aria-label="DEPRA home">
+            <div class="brand-mark">D</div>
+            <div class="brand-text">
+                <h1>DEPRA</h1>
+                <p>timeless drapes • modern grace</p>
+            </div>
+        </a>
+
+        <div class="nav-center">
+            <div class="search-bar">
+                <input id="searchInput" type="search" placeholder="Search sarees, silk, peach, coffee brown, wedding..." oninput="filterProducts()" />
+                <button class="search-btn" onclick="filterProducts()" aria-label="Search">⌕</button>
+            </div>
+            <div class="search-hints">
+                <button class="hint-chip" onclick="quickSearch('peach')">Pink Peach</button>
+                <button class="hint-chip" onclick="quickSearch('coffee')">Coffee Brown</button>
+                <button class="hint-chip" onclick="quickSearch('wedding')">Wedding</button>
+                <button class="hint-chip" onclick="quickSearch('office')">Office Wear</button>
+                <button class="hint-chip" onclick="quickSearch('cotton')">Cotton</button>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <div class="pill-toggle">
+                <button class="btn btn-ghost" id="authBtn" onclick="openAuthModal()">Login</button>
+                <button class="btn btn-outline" id="profileBtn" onclick="openProfileModal()">Profile</button>
+                <button class="btn btn-ghost" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+            </div>
+            <button class="icon-btn" onclick="openContactModal()" aria-label="Contact us">☎</button>
+            <button class="icon-btn" onclick="window.location.href='/cart'" aria-label="Cart">👜</button>
+        </div>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" onclick="toggleMobilePanel()">
+            <span></span>
+        </button>
+    </div>
+
+    <div class="container mobile-panel" id="mobilePanel">
+        <div class="nav-center mobile-only" style="margin-bottom:0.8rem;">
+            <div class="search-bar">
+                <input id="mobileSearchInput" type="search" placeholder="Search products..." oninput="syncSearchFromMobile(); filterProducts();" />
+                <button class="search-btn" onclick="filterProducts()" aria-label="Search">⌕</button>
+            </div>
+        </div>
+        <nav class="nav-links mobile-only" aria-label="Mobile navigation">
+            <a href="/home" class="active">Home</a>
+            <a href="/products">Collection</a>
+            <a href="#about">About Us</a>
+            <a href="/cart">Cart</a>
+            <a href="/orders">Orders</a>
+            <a href="/address">Address</a>
+        </nav>
+        <div class="nav-actions mobile-only" style="margin-top:0.8rem; display:grid; gap:0.65rem;">
+            <div class="pill-toggle" style="width:100%; flex-direction:column; align-items:stretch;">
+                <button class="btn btn-ghost" onclick="openAuthModal()">Login / Sign Up</button>
+                <button class="btn btn-outline" onclick="openProfileModal()">Profile & Saved Address</button>
+                <button class="btn btn-soft" onclick="openContactModal()">Contact Us</button>
+                <button class="btn btn-primary" onclick="window.location.href='/cart'">Go to Cart</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <div class="hero-grid">
+            <div>
+                <div class="eyebrow"><span class="eyebrow-dot"></span> Handmade elegance with coffee warmth and rose-toned pride</div>
+                <h2>Wear your <em>power</em> like poetry.</h2>
+                <p class="hero-copy">
+                    DEPRA brings together vintage grace, pink-peach softness, and bold women energy —
+                    a saree story crafted for the woman who walks like a flame and speaks like a blessing.
+                </p>
+
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='/products'">Shop Collection</button>
+                    <button class="btn btn-soft" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Read Our Story</button>
+                    <button class="btn btn-outline" onclick="openContactModal()">Contact Us</button>
+                </div>
+
+                <div class="hero-meta">
+                    <div class="meta-card">
+                        <strong>Pink-peach palette</strong>
+                        <span>Soft, elegant, and made to glow in every season.</span>
+                    </div>
+                    <div class="meta-card">
+                        <strong>Coffee richness</strong>
+                        <span>Deep tones that feel grounded, warm, and timeless.</span>
+                    </div>
+                    <div class="meta-card">
+                        <strong>Bold women energy</strong>
+                        <span>Modern silhouettes with an ancient heart.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-art" aria-label="Decorative saree illustration">
+                <div class="saree-sculpture"></div>
+                <div class="silhouette">
+                    <div class="head"></div>
+                    <div class="body"></div>
+                    <div class="drape"></div>
+                    <div class="arm left"></div>
+                    <div class="arm right"></div>
+                    <div class="hand left"></div>
+                    <div class="hand right"></div>
+                </div>
+                <div class="hero-badge">
+                    <strong>வாழ்க்கை ஒரு பயணம்</strong>
+                    <span>கடினங்கள் இருந்தாலும், மனம் வலுவாக இருந்தால் வெற்றியும் வரும்.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="featured">
+        <div class="section-head">
+            <div>
+                <h3>Featured Pieces</h3>
+                <p>
+                    A curated selection of sarees with warm coffee shades, rose petals, and vintage soul —
+                    built for everyday elegance and special days.
+                </p>
+            </div>
+        </div>
+
+        <div class="category-chips">
+            <span class="chip" onclick="quickSearch('coffee')">Coffee Brown Classics</span>
+            <span class="chip" onclick="quickSearch('peach')">Pink Peach Glow</span>
+            <span class="chip" onclick="quickSearch('wedding')">Wedding Drapes</span>
+            <span class="chip" onclick="quickSearch('office')">Office Elegance</span>
+            <span class="chip" onclick="quickSearch('vintage')">Temple Vintage</span>
+        </div>
+
+        <div class="product-grid" id="featuredGrid"></div>
+    </section>
+
+    <section class="section story-section" id="about">
+        <article class="story-card">
+            <h4>About Us</h4>
+            <p>
+                DEPRA was born from a dream stitched with stubborn hope. In the year 2025, Priya stood at the edge of uncertainty,
+                holding vision in one hand and courage in the other. There were late nights, silent doubts, and days where the world
+                felt too heavy — but she kept walking. One thread at a time, one brave decision at a time, she opened this store like
+                a lamp lit in the dark.
+            </p>
+            <p>
+                This brand is not just about fashion. It is about the quiet thunder of a woman who refuses to disappear. It is about
+                coffee-colored resilience, pink-peach softness, and the ancient dignity of tradition meeting a modern life.
+            </p>
+            <div class="quote-box">
+                “ஆயிரம் தடைகள் வந்தாலும் மனம் உடையாதே. <br>
+                உன் ஒளி உன்னைத் தேடி வரும்.”
+            </div>
+            <div class="tamil-lines">
+                <div class="tamil-pill"><strong>துணிவு</strong> இருந்தால், பாதை தானே திறக்கும்.</div>
+                <div class="tamil-pill"><strong>அன்பு</strong> உள்ள இடத்தில் அழகு பிறக்கும்.</div>
+                <div class="tamil-pill"><strong>உழைப்பு</strong> என்ற தீபம் ஒருபோதும் அணையாது.</div>
+            </div>
+        </article>
+
+        <aside class="about-panel">
+            <div>
+                <h4>Priya’s Vintage Dream</h4>
+                <p>
+                    A story painted with old-world charm, built with a woman’s steady hands and a heart that
+                    believes in grace over fear. Inspired by temple lanes, folk wisdom, and timeless saree culture.
+                </p>
+            </div>
+            <ul>
+                <li>Designed for bold women who still love softness.</li>
+                <li>Inspired by coffee, peach, rose, and bronze shades.</li>
+                <li>Made to feel like a classical story with a modern heartbeat.</li>
+                <li>Every product page should feel premium, warm, and simple to shop.</li>
+            </ul>
+            <small>“வெற்றி என்பது வேகம் அல்ல; விடாமுயற்சியின் வடிவு.”</small>
+        </aside>
+    </section>
+
+    <section class="section service-strip">
+        <div class="service-card">
+            <strong>Free Shipping</strong>
+            <span>Fast delivery across selected locations with easy tracking.</span>
+        </div>
+        <div class="service-card">
+            <strong>Easy Returns</strong>
+            <span>Simple return support so shopping feels safe and calm.</span>
+        </div>
+        <div class="service-card">
+            <strong>Secure Payments</strong>
+            <span>Protected checkout with trusted payment options.</span>
+        </div>
+        <div class="service-card">
+            <strong>Saved Address</strong>
+            <span>Save your address in profile for faster checkout next time.</span>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    DEPRA — Handcrafted sarees • Vintage soul • Modern woman energy • Built from Priya’s 2025 dream
+</footer>
+
+<!-- Auth Modal -->
+<div id="authModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div>
+                <h3 id="authTitle">Login</h3>
+                <p>Enter your details to continue to the saree garden.</p>
+            </div>
+            <button class="close-btn" onclick="closeAuthModal()" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="field-grid">
+            <input type="email" id="authEmail" placeholder="Email address" />
+            <div id="signupNameGroup" style="display:none;">
+                <input type="text" id="authName" placeholder="Full name" />
+            </div>
+            <input type="password" id="authPassword" placeholder="Password" />
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" id="authActionBtn" onclick="submitAuth()">Login</button>
+            <button class="btn btn-outline" onclick="toggleAuthMode()">Sign Up</button>
+            <button class="btn btn-soft" style="margin-left:auto;" onclick="closeAuthModal()">Cancel</button>
+        </div>
+
+        <div id="authFeedback" class="feedback"></div>
+        <div style="text-align: center; margin-top: 0.8rem;">
+            <a href="#" onclick="openForgotPasswordModal(); return false;" style="color: var(--rose); font-size: 0.85rem;">
+                Forgot password?
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div id="contactModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div>
+                <h3 id="contactTitle">Contact Us</h3>
+                <p>Say hello, ask for styling help, or tell us what you need.</p>
+            </div>
+            <button class="close-btn" onclick="closeContactModal()" aria-label="Close contact modal">×</button>
+        </div>
+
+        <div class="field-grid">
+            <input type="text" id="contactName" placeholder="Your name" />
+            <input type="email" id="contactEmail" placeholder="Your email" />
+            <textarea id="contactMessage" rows="5" placeholder="Write your message..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="sendContactMessage()">Send Message</button>
+            <button class="btn btn-soft" onclick="closeContactModal()">Close</button>
+        </div>
+        <div id="contactFeedback" class="feedback"></div>
+    </div>
+</div>
+
+<!-- Profile Modal (Backend Integrated) -->
+<div id="profileModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div>
+                <h3 id="profileTitle">Profile & Address</h3>
+                <p>Save your address so checkout feels smooth and fast.</p>
+            </div>
+            <button class="close-btn" onclick="closeProfileModal()" aria-label="Close profile modal">×</button>
+        </div>
+
+        <div class="profile-details">
+            <div><strong>Name:</strong> <span id="profileNameText">Guest</span></div>
+            <div><strong>Email:</strong> <span id="profileEmailText">Not logged in</span></div>
+        </div>
+
+        <div class="field-grid" style="margin-top:1rem;">
+            <input type="text" id="profileNameInput" placeholder="Full name" />
+            <input type="text" id="profilePhoneInput" placeholder="Phone number" />
+            <input type="text" id="profileAddressLine1" placeholder="Address line 1" />
+            <input type="text" id="profileAddressLine2" placeholder="Address line 2" />
+            <input type="text" id="profileCity" placeholder="City" />
+            <input type="text" id="profileState" placeholder="State" />
+            <input type="text" id="profilePincode" placeholder="Pincode" />
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="saveProfileAddress()">Save Address</button>
+            <button class="btn btn-outline" onclick="loadProfileAddresses()">Refresh List</button>
+            <button class="btn btn-soft" style="margin-left:auto;" onclick="closeProfileModal()">Close</button>
+        </div>
+
+        <div class="saved-box" id="savedAddressBox">
+            <em>Loading addresses...</em>
+        </div>
+        <div id="profileFeedback" class="feedback"></div>
+    </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div id="forgotPasswordModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div>
+                <h3 id="forgotTitle">Reset your password</h3>
+                <p>Enter your email address and we'll send you a secure link to reset it.</p>
+            </div>
+            <button class="close-btn" onclick="closeForgotPasswordModal()" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="field-grid">
+            <input type="email" id="forgotEmail" placeholder="Email address" />
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="sendResetLink()">Send reset link</button>
+            <button class="btn btn-soft" onclick="closeForgotPasswordModal()">Cancel</button>
+        </div>
+        <div id="forgotFeedback" class="feedback"></div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://localhost:8080';
+    const TOKEN_KEY = 'jwt_token';
+    let authMode = 'login';
+    let allProducts = [];
+
+    function getToken() { return localStorage.getItem(TOKEN_KEY); }
+    function setToken(token) { localStorage.setItem(TOKEN_KEY, token); }
+    function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+    async function apiFetch(endpoint, options = {}) {
+      const url = `${API_BASE}${endpoint}`;
+      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      const token = getToken();
+      if (token && !options.public) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch(url, { ...options, headers });
+      if (!res.ok) {
+        let errMsg = await res.text();
+        throw new Error(errMsg || 'Request failed');
+      }
+      const contentType = res.headers.get('content-type') || '';
+      return contentType.includes('application/json') ? await res.json() : {};
+    }
+
+    function updateAuthUI() {
+      const token = getToken();
+      const loginBtn = document.getElementById('authBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const profileBtn = document.getElementById('profileBtn');
+      if (token) {
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        profileBtn.style.display = 'inline-block';
+      } else {
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+        profileBtn.style.display = 'inline-block';
+      }
+    }
+
+    function toggleMobilePanel() {
+      document.getElementById('mobilePanel').classList.toggle('open');
+    }
+
+    function syncSearchFromMobile() {
+      const mobile = document.getElementById('mobileSearchInput');
+      const desktop = document.getElementById('searchInput');
+      if (mobile && desktop) desktop.value = mobile.value;
+    }
+
+    function quickSearch(term) {
+      document.getElementById('searchInput').value = term;
+      const mobile = document.getElementById('mobileSearchInput');
+      if (mobile) mobile.value = term;
+      filterProducts();
+      document.getElementById('featured').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function filterProducts() {
+      const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      const grid = document.getElementById('featuredGrid');
+      if (!grid) return;
+      const filtered = allProducts.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const desc = (p.description || '').toLowerCase();
+        return !q || name.includes(q) || desc.includes(q);
+      });
+      renderProducts(filtered.length ? filtered : []);
+    }
+
+    function renderProducts(products) {
+      const grid = document.getElementById('featuredGrid');
+      if (!products.length) {
+        grid.innerHTML = `<div class="empty-state">No matching sarees found. Try coffee, peach, wedding, or office.</div>`;
+        return;
+      }
+      grid.innerHTML = products.slice(0, 8).map((p, index) => `
+        <article class="product-card">
+          <div class="product-media">
+            <span class="product-tag">${index === 0 ? 'Best Seller' : index === 1 ? 'New Arrival' : 'Handpicked'}</span>
+            <img src="${p.imageUrl || 'https://placehold.co/600x800?text=DEPRA'}" alt="${p.name || 'Product'}">
+          </div>
+          <div class="product-info">
+            <h4>${p.name || 'Elegant Saree'}</h4>
+            <p>${p.description || 'A beautifully styled saree with vintage grace and premium finish.'}</p>
+            <div class="price-row">
+              <span class="price">₹${p.price ?? '—'}</span>
+              <span class="old-price">₹${p.mrp || (p.price ? Math.round(p.price * 1.2) : '—')}</span>
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-sm" onclick="addToCart(${p.id})">Add to Cart</button>
+              <button class="btn btn-outline btn-sm" onclick="window.location.href='/products-detail?id=${p.id}'">View</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    async function loadFeatured() {
+      try {
+        const products = await apiFetch('/api/products', { public: true });
+        allProducts = Array.isArray(products) ? products : [];
+        renderProducts(allProducts.length ? allProducts.slice(0, 8) : []);
+      } catch (err) {
+        allProducts = [
+          { id: 1, name: 'Vintage Rose Saree', description: 'Soft, romantic, and rooted in old-soul elegance.', price: 1799, mrp: 2299, imageUrl: 'https://placehold.co/600x800?text=DEPRA' },
+          { id: 2, name: 'Coffee Silk Classic', description: 'A deep-toned drape for calm confidence and quiet power.', price: 1949, mrp: 2499, imageUrl: 'https://placehold.co/600x800?text=DEPRA' },
+          { id: 3, name: 'Pink Peach Reverie', description: 'Light, dreamy, and made to shine in daytime celebrations.', price: 1599, mrp: 2049, imageUrl: 'https://placehold.co/600x800?text=DEPRA' },
+          { id: 4, name: 'Temple Weave', description: 'A ceremonial-inspired piece with a graceful heritage mood.', price: 2149, mrp: 2699, imageUrl: 'https://placehold.co/600x800?text=DEPRA' }
+        ];
+        renderProducts(allProducts);
+        console.error(err);
+      }
+    }
+
+    async function addToCart(productId) {
+      if (!getToken()) {
+        openAuthModal();
+        return;
+      }
+      try {
+        await apiFetch('/api/cart/add', {
+          method: 'POST',
+          body: JSON.stringify({ productId, quantity: 1 })
+        });
+        alert('Added to cart');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('authModal').style.display = 'flex';
+      document.getElementById('authFeedback').innerText = '';
+    }
+    function closeAuthModal() {
+      document.getElementById('authModal').style.display = 'none';
+      document.getElementById('authFeedback').innerText = '';
+    }
+
+    function toggleAuthMode() {
+      authMode = authMode === 'login' ? 'signup' : 'login';
+      const title = document.getElementById('authTitle');
+      const btn = document.getElementById('authActionBtn');
+      const nameGroup = document.getElementById('signupNameGroup');
+      if (authMode === 'signup') {
+        title.innerText = 'Create Account';
+        btn.innerText = 'Sign Up';
+        nameGroup.style.display = 'block';
+      } else {
+        title.innerText = 'Login';
+        btn.innerText = 'Login';
+        nameGroup.style.display = 'none';
+      }
+    }
+
+    async function submitAuth() {
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value.trim();
+      const feedback = document.getElementById('authFeedback');
+      if (!email || !password) {
+        feedback.innerText = 'Email and password are required.';
+        return;
+      }
+      try {
+        if (authMode === 'signup') {
+          const name = document.getElementById('authName').value.trim();
+          if (!name) {
+            feedback.innerText = 'Full name is required.';
+            return;
+          }
+          await fetch(`${API_BASE}/api/users/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+          });
+          feedback.innerText = 'Signup successful. Please login now.';
+          setTimeout(() => {
+            if (authMode !== 'login') toggleAuthMode();
+          }, 350);
+          return;
+        }
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (!res.ok) throw new Error('Login failed');
+        const data = await res.json();
+        const token = data.accessToken || data.token;
+        if (!token) throw new Error('Token not received');
+        setToken(token);
+        feedback.innerText = 'Login successful!';
+        setTimeout(() => {
+          closeAuthModal();
+          updateAuthUI();
+          location.reload();
+        }, 500);
+      } catch (err) {
+        feedback.innerText = err.message;
+      }
+    }
+
+    function openForgotPasswordModal() {
+      document.getElementById('forgotPasswordModal').style.display = 'flex';
+      document.getElementById('forgotFeedback').innerHTML = '';
+      document.getElementById('forgotEmail').value = '';
+    }
+    function closeForgotPasswordModal() {
+      document.getElementById('forgotPasswordModal').style.display = 'none';
+    }
+    async function sendResetLink() {
+      const email = document.getElementById('forgotEmail').value.trim();
+      const feedback = document.getElementById('forgotFeedback');
+      if (!email) {
+        feedback.innerText = 'Please enter your email address.';
+        feedback.style.color = '#c06060';
+        return;
+      }
+      try {
+        const response = await fetch(`${API_BASE}/api/auth/forgot-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        if (!response.ok) throw new Error('Request failed');
+        feedback.innerHTML = '<span style="color: #1f8a4c;">✅ Reset link sent! Check your email.</span>';
+        setTimeout(() => closeForgotPasswordModal(), 2500);
+      } catch (err) {
+        feedback.innerText = 'Error: ' + err.message;
+        feedback.style.color = '#c06060';
+      }
+    }
+
+    function logout() {
+      clearToken();
+      updateAuthUI();
+      location.reload();
+    }
+
+    function openContactModal() {
+      document.getElementById('contactModal').style.display = 'flex';
+      document.getElementById('contactFeedback').innerText = '';
+    }
+    function closeContactModal() {
+      document.getElementById('contactModal').style.display = 'none';
+      document.getElementById('contactFeedback').innerText = '';
+    }
+    function sendContactMessage() {
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
+      const feedback = document.getElementById('contactFeedback');
+      if (!name || !email || !message) {
+        feedback.innerText = 'Please fill name, email, and message.';
+        return;
+      }
+      feedback.innerText = 'Thanks! Your message is ready. Connect this to your backend contact API if needed.';
+    }
+
+    // PROFILE & ADDRESS (backend integrated)
+    async function loadProfileAddresses() {
+      const token = getToken();
+      if (!token) {
+        document.getElementById('savedAddressBox').innerHTML = '<em>Please login to see addresses</em>';
+        return;
+      }
+      try {
+        const addresses = await apiFetch('/api/address');
+        const container = document.getElementById('savedAddressBox');
+        if (!addresses.length) {
+          container.innerHTML = '<em>No saved addresses yet. Add one below.</em>';
+          return;
+        }
+        container.innerHTML = addresses.map(addr => `
+          <div class="address-item">
+            <div>
+              <strong>${escapeHtml(addr.name)}</strong><br>
+              ${escapeHtml(addr.street)}, ${escapeHtml(addr.city)} ${escapeHtml(addr.pincode)}<br>
+              📞 ${escapeHtml(addr.phone)}
+            </div>
+            <button onclick="deleteAddress(${addr.id})">🗑️</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('savedAddressBox').innerHTML = `<em>Error loading addresses: ${err.message}</em>`;
+      }
+    }
+
+    async function saveProfileAddress() {
+      const token = getToken();
+      if (!token) {
+        openAuthModal();
+        return;
+      }
+      const addressData = {
+        name: document.getElementById('profileNameInput').value.trim(),
+        phone: document.getElementById('profilePhoneInput').value.trim(),
+        street: document.getElementById('profileAddressLine1').value.trim(),
+        city: document.getElementById('profileCity').value.trim(),
+        state: document.getElementById('profileState').value.trim(),
+        pincode: document.getElementById('profilePincode').value.trim()
+      };
+      if (!addressData.name || !addressData.phone || !addressData.street || !addressData.city) {
+        document.getElementById('profileFeedback').innerText = 'Please fill all required fields.';
+        return;
+      }
+      try {
+        await apiFetch('/api/address', {
+          method: 'POST',
+          body: JSON.stringify(addressData)
+        });
+        document.getElementById('profileFeedback').innerText = 'Address saved successfully!';
+        loadProfileAddresses();
+        // clear form
+        document.getElementById('profileNameInput').value = '';
+        document.getElementById('profilePhoneInput').value = '';
+        document.getElementById('profileAddressLine1').value = '';
+        document.getElementById('profileAddressLine2').value = '';
+        document.getElementById('profileCity').value = '';
+        document.getElementById('profileState').value = '';
+        document.getElementById('profilePincode').value = '';
+      } catch (err) {
+        document.getElementById('profileFeedback').innerText = 'Error: ' + err.message;
+      }
+    }
+
+    async function deleteAddress(id) {
+      if (!confirm('Delete this address?')) return;
+      try {
+        await apiFetch(`/api/address/${id}`, { method: 'DELETE' });
+        loadProfileAddresses();
+      } catch (err) {
+        alert('Delete failed: ' + err.message);
+      }
+    }
+
+    function openProfileModal() {
+      const token = getToken();
+      if (!token) {
+        openAuthModal();
+        return;
+      }
+      document.getElementById('profileModal').style.display = 'flex';
+      document.getElementById('profileFeedback').innerText = '';
+      // set user info from token? optional
+      loadProfileAddresses();
+    }
+    function closeProfileModal() {
+      document.getElementById('profileModal').style.display = 'none';
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+    }
+
+    window.addEventListener('click', (e) => {
+      const ids = ['authModal', 'contactModal', 'profileModal', 'forgotPasswordModal'];
+      ids.forEach(id => {
+        const modal = document.getElementById(id);
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAuthModal();
+        closeContactModal();
+        closeProfileModal();
+        closeForgotPasswordModal();
+      }
+    });
+
+    window.onload = () => {
+      loadFeatured();
+      updateAuthUI();
+    };
+
+    // Expose globals
+    window.openAuthModal = openAuthModal;
+    window.closeAuthModal = closeAuthModal;
+    window.openForgotPasswordModal = openForgotPasswordModal;
+    window.closeForgotPasswordModal = closeForgotPasswordModal;
+    window.sendResetLink = sendResetLink;
+    window.toggleAuthMode = toggleAuthMode;
+    window.submitAuth = submitAuth;
+    window.addToCart = addToCart;
+    window.logout = logout;
+    window.toggleMobilePanel = toggleMobilePanel;
+    window.openContactModal = openContactModal;
+    window.closeContactModal = closeContactModal;
+    window.sendContactMessage = sendContactMessage;
+    window.openProfileModal = openProfileModal;
+    window.closeProfileModal = closeProfileModal;
+    window.saveProfileAddress = saveProfileAddress;
+    window.loadProfileAddresses = loadProfileAddresses;
+    window.deleteAddress = deleteAddress;
+    window.quickSearch = quickSearch;
+    window.filterProducts = filterProducts;
+    window.syncSearchFromMobile = syncSearchFromMobile;
+</script>
+</body>
+</html>
