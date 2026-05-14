@@ -26,7 +26,7 @@
         :root {
             --primary: #7f1d1d;      /* deep maroon */
             --primary-light: #991b1b;
-            --gold: #a50ba2;
+            --gold: #c9a23d;
             --gold-soft: #fbf6e9;
             --gray-bg: #f8fafc;
             --card-white: #ffffff;
@@ -527,7 +527,7 @@
             if (!token) {
                 showMessage('error', 'Please log in to view your order.');
             } else {
-                fetch(`/api/orders/${orderId}`, {
+                fetch(`https://depra-ecom.onrender.com/api/orders/${orderId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(res => {

@@ -16,7 +16,7 @@
           --coral-dark: #d85e40;
           --text: #3e2a26;
           --muted: #7f665f;
-          --gold: #d30ea4;
+          --gold: #d4a373;
           --shadow: 0 18px 35px rgba(231,111,81,.10);
           --shadow-soft: 0 8px 18px rgba(0,0,0,.05);
           --radius: 26px;
@@ -619,7 +619,7 @@
 
       async function loadProducts(){
         try{
-          const res = await fetch('/api/products');
+          const res = await fetch('https://depra-ecom.onrender.com/api/products');
           if(res.ok){
             const data = await res.json();
             allProducts = Array.isArray(data) ? data.map(normalizeProduct) : [];
@@ -772,7 +772,7 @@
           return;
         }
         try{
-          await fetch('/api/cart/add', {
+          await fetch('https://depra-ecom.onrender.com/api/cart/add', {
             method:'POST',
             headers:{
               'Content-Type':'application/json',
@@ -819,7 +819,7 @@
         try{
           if(authMode === 'signup'){
             const name = document.getElementById('authName').value.trim();
-            await fetch('/api/users/register', {
+            await fetch('https://depra-ecom.onrender.com/api/users/register', {
               method:'POST',
               headers:{'Content-Type':'application/json'},
               body: JSON.stringify({name, email, password:pass})
@@ -829,7 +829,7 @@
             return;
           }
 
-          const res = await fetch('/api/auth/login', {
+          const res = await fetch('https://depra-ecom.onrender.com/api/auth/login', {
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body: JSON.stringify({email, password:pass})

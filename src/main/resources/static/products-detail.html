@@ -344,7 +344,7 @@
         const headers = {'Content-Type':'application/json'};
         const token = getToken();
         if(token && !options.public) headers['Authorization'] = `Bearer ${token}`;
-        const res = await fetch(endpoint, {...options, headers});
+        const res = await fetch('https://depra-ecom.onrender.com' + endpoint, {...options, headers});
         if(!res.ok) throw new Error(await res.text());
         return res.json();
       }

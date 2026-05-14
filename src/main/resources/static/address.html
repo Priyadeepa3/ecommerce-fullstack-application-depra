@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter', sans-serif; background: #d0d6ff; color: #b6d0ef; }
-        :root { --maroon: #95b0bc; --gold: #032c43; --shadow:0 12px 28px rgba(0,0,0,0.08); }
+        body { font-family:'Inter', sans-serif; background:#FFFDD0; color:#2c1e16; }
+        :root { --maroon:#800000; --gold:#D4AF37; --shadow:0 12px 28px rgba(0,0,0,0.08); }
         .container { max-width:1280px; margin:0 auto; padding:0 1.5rem; }
-        .site-header { background: rgb(3 44 67); backdrop-filter:blur(10px); border-bottom:2px solid var(--gold); padding:0.8rem 0; position:sticky; top:0; z-index:1000; }
+        .site-header { background:rgba(255,253,208,0.96); backdrop-filter:blur(10px); border-bottom:2px solid var(--gold); padding:0.8rem 0; position:sticky; top:0; z-index:1000; }
         .header-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; }
         .logo h1 { font-family:'Playfair Display', serif; font-size:1.9rem; color:var(--maroon); }
         .nav-links { display:flex; gap:1.2rem; }
@@ -49,7 +49,7 @@
 <script>
     const TOKEN_KEY='jwt_token';
     function getToken(){ return localStorage.getItem(TOKEN_KEY); }
-    async function apiFetch(endpoint,options={}){ const headers={'Content-Type':'application/json','Authorization':`Bearer ${getToken()}`}; const res=await fetch(endpoint,{...options,headers}); if(!res.ok) throw new Error(await res.text()); return res.json(); }
+    async function apiFetch(endpoint,options={}){ const headers={'Content-Type':'application/json','Authorization':`Bearer ${getToken()}`}; const res=await fetch('https://depra-ecom.onrender.com' + endpoint,{...options,headers}); if(!res.ok) throw new Error(await res.text()); return res.json(); }
     async function loadAddresses(){ try{ const addresses=await apiFetch('/api/address'); const container=document.getElementById('addressList'); if(!addresses.length){ container.innerHTML='<p>No saved addresses</p>'; return; } container.innerHTML=addresses.map(a=>`<div class="address-card"><div><strong>${a.name}</strong><br>${a.street}, ${a.city} ${a.pincode}<br>${a.phone}</div><button class="btn-primary" style="padding:0.4rem 1rem;" onclick="deleteAddress(${a.id})">Delete</button></div>`).join(''); }catch(e){ console.error(e); } }
     async function saveAddress(){ const payload={ name:document.getElementById('addrName').value, phone:document.getElementById('addrPhone').value, street:document.getElementById('addrStreet').value, city:document.getElementById('addrCity').value, state:document.getElementById('addrState').value, pincode:document.getElementById('addrPincode').value }; if(!payload.name||!payload.phone){ alert('Name and phone required'); return; } try{ await apiFetch('/api/address',{method:'POST',body:JSON.stringify(payload)}); alert('Address saved'); loadAddresses(); document.querySelectorAll('#addrName,#addrPhone,#addrStreet,#addrCity,#addrState,#addrPincode').forEach(i=>i.value=''); }catch(e){ alert(e.message); } }
     async function deleteAddress(id){ if(confirm('Delete address?')){ try{ await apiFetch(`/api/address/${id}`,{method:'DELETE'}); loadAddresses(); }catch(e){ alert(e.message); } } }

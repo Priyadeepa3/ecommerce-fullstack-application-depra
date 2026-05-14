@@ -170,7 +170,7 @@
         if (!token) {
             document.getElementById('trackingContent').innerHTML = '<p>Please log in to track your order.</p>';
         } else {
-            fetch(`/api/orders/${orderId}`, {
+            fetch(`https://depra-ecom.onrender.com/api/orders/${orderId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             .then(res => res.json())

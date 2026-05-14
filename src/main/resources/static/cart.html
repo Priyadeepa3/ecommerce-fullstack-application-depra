@@ -195,7 +195,7 @@
 
     async function apiFetch(endpoint, options = {}) {
         const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` };
-        const res = await fetch(endpoint, { ...options, headers });
+        const res = await fetch('https://depra-ecom.onrender.com' + endpoint, { ...options, headers });
         if (!res.ok) throw new Error(await res.text());
         return res.json();
     }
@@ -274,12 +274,12 @@
         const email = document.getElementById('authEmail').value, pass = document.getElementById('authPassword').value;
         if (authMode === 'signup') {
             const name = document.getElementById('authName').value;
-            await fetch('/api/users/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password: pass }) });
+            await fetch('https://depra-ecom.onrender.com/api/users/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password: pass }) });
             alert('Signup success! Login');
             toggleAuthMode();
             return;
         }
-        const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: pass }) });
+        const res = await fetch('https://depra-ecom.onrender.com/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: pass }) });
         if (res.ok) {
             const data = await res.json();
             setToken(data.accessToken || data.token);
