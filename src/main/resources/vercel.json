@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "static/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/", "dest": "/static/index.html" },
+    { "src": "/home", "dest": "/static/home.html" },
+    { "src": "/login", "dest": "/static/login.html" },
+    { "src": "/signup", "dest": "/static/Signup.html" },
+    { "src": "/products", "dest": "/static/products.html" },
+    { "src": "/products-detail", "dest": "/static/products-detail.html" },
+    { "src": "/cart", "dest": "/static/cart.html" },
+    { "src": "/wishlist", "dest": "/static/Wishlist.html" },
+    { "src": "/checkout", "dest": "/static/checkout.html" },
+    { "src": "/orders", "dest": "/static/orders.html" },
+    { "src": "/order-tracking", "dest": "/static/order-tracking.html" },
+    { "src": "/order-summary", "dest": "/static/Order-Summary.html" },
+    { "src": "/address", "dest": "/static/address.html" },
+    { "src": "/forgot-password", "dest": "/static/forgotPassword.html" },
+    { "src": "/reset-password", "dest": "/static/resetPassword.html" },
+    { "src": "/(.*)", "dest": "/static/$1" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}
