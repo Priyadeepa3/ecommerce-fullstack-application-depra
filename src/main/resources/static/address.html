@@ -47,6 +47,7 @@
 <footer>DEPRA – Your address, your convenience</footer>
 
 <script>
+    const API_BASE = "https://depra-ecom.onrender.com";
     const TOKEN_KEY='jwt_token';
     function getToken(){ return localStorage.getItem(TOKEN_KEY); }
     async function apiFetch(endpoint,options={}){ const headers={'Content-Type':'application/json','Authorization':`Bearer ${getToken()}`}; const res=await fetch('https://depra-ecom.onrender.com' + endpoint,{...options,headers}); if(!res.ok) throw new Error(await res.text()); return res.json(); }

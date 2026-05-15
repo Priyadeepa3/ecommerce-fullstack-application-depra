@@ -29,62 +29,33 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // ✅ ENABLE CORS
 
                 .authorizeHttpRequests(auth -> auth
-
-                        // =========================
-                        // 🌐 PUBLIC UI ROUTES (CLEAN URLS)
-                        // =========================
-                        .requestMatchers("/","/home", "/products","/products-detail","/cart","/checkout","/orders","/index.html","/cart.html","/checkout.html",
-                                "/Order-successful.html","/Order-Summary.html","/static/**", "/images/**", "/js/**", "/css/**","/orders.html","/address.html","checkout.html","/forgotPassword.html","/resetPassword.html","/Signup.html",
-                                "/order-tracking.html","/Order-Summary","/products.html","/Signup","/address","/order-tracking","/Order-successful","/Wishlist.html",
-                                "/home.html","/login.html","/products-detail.html").permitAll()
-
-                        // =========================
-                        // 📄 STATIC FILES
-                        // =========================
+                        .requestMatchers("/", "/home", "/products", "/products-detail", "/cart", "/checkout", "/orders",
+                                "/index.html", "/cart.html", "/checkout.html", "/Order-successful.html", "/Order-Summary.html",
+                                "/static/**", "/images/**", "/js/**", "/css/**", "/orders.html", "/address.html",
+                                "/forgotPassword.html", "/resetPassword.html", "/Signup.html", "/order-tracking.html",
+                                "/Order-Summary", "/products.html", "/Signup", "/address", "/order-tracking",
+                                "/Order-successful", "/Wishlist.html", "/home.html", "/login.html", "/products-detail.html")
+                        .permitAll()
                         .requestMatchers("/static/**", "/images/**", "/css/**", "/js/**").permitAll()
-
-                        // =========================
-                        // 🔓 AUTH APIs (PUBLIC)
-                        // =========================
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/users/register"
-                        ).permitAll()
-
-                        // =========================
-                        // 🛍️ PUBLIC APIs
-                        // =========================
+                        .requestMatchers("/api/auth/**", "/api/users/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
-
-                        // =========================
-                        // 🔐 USER APIs (LOGIN REQUIRED)
-                        // =========================
                         .requestMatchers("/api/cart/**").authenticated()
                         .requestMatchers("/api/wishlist/**").authenticated()
                         .requestMatchers("/api/orders/**").authenticated()
                         .requestMatchers("/api/payment/**").authenticated()
                         .requestMatchers("/api/address/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/reviews/**").authenticated()
-
-                        // =========================
-                        // 👑 ADMIN APIs
-                        // =========================
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-                        // =========================
-                        // ❗ EVERYTHING ELSE
-                        // =========================
                         .anyRequest().authenticated()
                 )
-
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -99,15 +70,18 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8080")); // your frontend origin
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
         config.setAllowedOrigins(List.of(
                 "https://depra-ecom.onrender.com",
-                "https://ecommerce-fullstack-application-depra.vercel.app",
+                "https://ecommerce-fullstack-application-dep.vercel.app",
+                "https://*.vercel.app",
+                "http://localhost:3000",
                 "http://localhost:8080"
         ));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
+        config.setExposedHeaders(List.of("Authorization"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

@@ -25,6 +25,7 @@
     <div id="msg" style="margin-top:1rem;"></div>
 </div>
 <script>
+    const API_BASE = "https://depra-ecom.onrender.com";
     async function signup(){ const name=document.getElementById('name').value, email=document.getElementById('email').value, pass=document.getElementById('password').value; const res=await fetch('https://depra-ecom.onrender.com/api/users/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})}); if(res.ok){ document.getElementById('msg').innerHTML='✅ Registration successful! <a href="/login">Login now</a>'; } else { document.getElementById('msg').innerText='Error signing up'; } }
 </script>
 </body>

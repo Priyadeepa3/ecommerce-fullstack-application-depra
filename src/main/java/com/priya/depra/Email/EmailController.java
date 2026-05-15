@@ -38,7 +38,7 @@ public class EmailController {
 
         userRepository.save(user);
 
-        String link = "http://localhost:8080/reset-password.html?token=" + token;
+        String link = "https://depra-ecom.onrender.com/resetPassword.html?token=" + token;
         emailService.sendResetEmail(email, link);
 
         return ResponseEntity.ok("Reset link sent");

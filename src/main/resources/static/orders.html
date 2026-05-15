@@ -39,6 +39,7 @@
 <footer>DEPRA – Track your elegance</footer>
 
 <script>
+    const API_BASE = "https://depra-ecom.onrender.com";
     const TOKEN_KEY='jwt_token';
     function getToken(){ return localStorage.getItem(TOKEN_KEY); }
     async function apiFetch(endpoint,options={}){

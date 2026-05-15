@@ -25,6 +25,7 @@
     <div id="msg" style="margin-top:1rem; color:red;"></div>
 </div>
 <script>
+    const API_BASE = "https://depra-ecom.onrender.com";
     async function login(){ const email=document.getElementById('email').value, pass=document.getElementById('password').value; const res=await fetch('https://depra-ecom.onrender.com/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})}); if(res.ok){ const data=await res.json(); localStorage.setItem('jwt_token',data.accessToken||data.token); window.location.href='/home'; } else { document.getElementById('msg').innerText='Login failed'; } }
 </script>
 </body>

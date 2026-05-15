@@ -336,7 +336,9 @@
 
 <script>
     (function(){
-      const TOKEN_KEY = 'jwt_token';
+
+        const API_BASE = "https://depra-ecom.onrender.com";
+        const TOKEN_KEY = 'jwt_token';
 
       function getToken(){ return localStorage.getItem(TOKEN_KEY); }
 
@@ -349,11 +351,15 @@
         return res.json();
       }
 
-      function normalizeImageUrl(url){
-        if(!url) return 'https://placehold.co/800x1000/ffe1d9/d95d77?text=No+Image';
-        if(url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url;
-        return '/' + url;
-      }
+        function normalizeImageUrl(url){
+            if(!url)
+                return 'https://placehold.co/600x800/ffe1d9/d95d77?text=No+Image';
+
+            if(url.startsWith('http'))
+                return url;
+
+            return `${API_BASE}/${url.replace(/^\/+/, '')}`;
+        }
 
       const productId = new URLSearchParams(window.location.search).get('id');
 
