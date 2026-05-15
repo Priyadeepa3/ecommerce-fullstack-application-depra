@@ -2,7 +2,7 @@ package com.priya.depra.Product;
 
 import com.priya.depra.Notification.NotificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,30 +14,42 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
 
-    @Autowired
     private final ProductRepository productRepository;
-    @Autowired
     private final CategoryRepository categoryRepository;
-    @Autowired
     private final Productmapper productMapper;
     private final NotificationService notificationService;
 
-    public  List<Productdto> getAllActiveProducts() {
+    @Value("${app.backend-base-url:https://depra-ecom.onrender.com}")
+    private String backendBaseUrl;
+
+    public List<Productdto> getAllActiveProducts() {
         return productRepository.findByActiveTrue().stream()
-                .map(productMapper::toDto).toList();
+                .map(product -> {
+                    Productdto dto = productMapper.toDto(product);
+                    normalizeImageUrl(dto);
+                    return dto;
+                })
+                .toList();
     }
 
     public List<Productdto> getAllProducts() {
         return productRepository.findAll().stream()
-                .map(productMapper::toDto).collect(Collectors.toList());
+                .map(product -> {
+                    Productdto dto = productMapper.toDto(product);
+                    normalizeImageUrl(dto);
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
-    public void updateStock(Long productId, int stock){
-        Product product = productRepository.findById(productId).orElseThrow();
+    public void updateStock(Long productId, int stock) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new RuntimeException("Product not found with id: " + productId)
+        );
         product.setStockQuantity(stock);
         productRepository.save(product);
 
-        if(stock > 0 && product.getOwner() != null){
+        if (stock > 0 && product.getOwner() != null) {
             notificationService.createNotification(
                     product.getOwner(),
                     "Product Back in Stock",
@@ -48,28 +60,31 @@ public class ProductService {
 
     public Productdto getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        return productMapper.toDto(product);
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        Productdto dto = productMapper.toDto(product);
+        normalizeImageUrl(dto);
+        return dto;
     }
 
     public Productdto createProduct(Productdto dto) {
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         Product product = productMapper.toEntity(dto, category);
-        return productMapper.toDto(productRepository.save(product));
+        Productdto saved = productMapper.toDto(productRepository.save(product));
+        normalizeImageUrl(saved);
+        return saved;
     }
 
     public Productdto updateProduct(Long id, Productdto dto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        // Update all fields
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         product.setStockQuantity(dto.getStockQuantity());
         product.setDescription(dto.getDescription());
-
-        return productMapper.toDto(productRepository.save(product));
+        Productdto saved = productMapper.toDto(productRepository.save(product));
+        normalizeImageUrl(saved);
+        return saved;
     }
 
     public void deleteProduct(Long id) {
@@ -87,64 +102,59 @@ public class ProductService {
 
     public List<Productdto> getByCategory(Long categoryId) {
         return productRepository.findByCategoryId(categoryId).stream()
-                .map(productMapper::toDto).toList();
+                .map(product -> {
+                    Productdto dto = productMapper.toDto(product);
+                    normalizeImageUrl(dto);
+                    return dto;
+                })
+                .toList();
     }
 
     public List<Productdto> getByPriceRange(BigDecimal min, BigDecimal max) {
         return productRepository.findByPriceBetween(min, max).stream()
-                .map(productMapper::toDto).toList();
+                .map(product -> {
+                    Productdto dto = productMapper.toDto(product);
+                    normalizeImageUrl(dto);
+                    return dto;
+                })
+                .toList();
     }
 
-
     public Productdto updatePartial(Long id, Map<String, Object> updates) {
-
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         updates.forEach((key, value) -> {
             switch (key) {
-
-                case "name":
-                    product.setName((String) value);
-                    break;
-
-                case "description":
-                    product.setDescription((String) value);
-                    break;
-
-                case "price":
-                    product.setPrice(new BigDecimal(value.toString()));
-                    break;
-
-                case "discountPrice":
-                    product.setDiscountPrice(new BigDecimal(value.toString()));
-                    break;
-
-                case "stockQuantity":
-                    product.setStockQuantity((Integer) value);
-                    break;
-
-                case "fabric":
-                    product.setFabric((String) value);
-                    break;
-
-                case "color":
-                    product.setColor((String) value);
-                    break;
-
-                case "active":
-                    product.setActive((Boolean) value);
-                    break;
-
-                default:
-                    throw new RuntimeException("Invalid field: " + key);
+                case "name"          -> product.setName((String) value);
+                case "description"   -> product.setDescription((String) value);
+                case "price"         -> product.setPrice(new BigDecimal(value.toString()));
+                case "discountPrice" -> product.setDiscountPrice(new BigDecimal(value.toString()));
+                case "stockQuantity" -> product.setStockQuantity((Integer) value);
+                case "fabric"        -> product.setFabric((String) value);
+                case "color"         -> product.setColor((String) value);
+                case "active"        -> product.setActive((Boolean) value);
+                case "imageUrl"      -> product.setImageUrl((String) value);
+                default -> throw new RuntimeException("Unknown field: " + key);
             }
         });
 
-        Product saved = productRepository.save(product);
-
-        return productMapper.toDto(saved);// your existing mapper
+        Productdto saved = productMapper.toDto(productRepository.save(product));
+        normalizeImageUrl(saved);
+        return saved;
     }
 
+    private void normalizeImageUrl(Productdto dto) {
+        if (dto == null) return;
+        String url = dto.getImageUrl();
+        if (url == null || url.isBlank()) return;
+        url = url.trim();
 
+        if (url.startsWith("http://") || url.startsWith("https://")) return;
+
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        dto.setImageUrl(backendBaseUrl + url);
+    }
 }

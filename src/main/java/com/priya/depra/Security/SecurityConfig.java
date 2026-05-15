@@ -18,32 +18,39 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // ✅ ENABLE CORS
-
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home", "/products", "/products-detail", "/cart", "/checkout", "/orders",
-                                "/index.html", "/cart.html", "/checkout.html", "/Order-successful.html", "/Order-Summary.html",
-                                "/static/**", "/images/**", "/js/**", "/css/**", "/orders.html", "/address.html",
-                                "/forgotPassword.html", "/resetPassword.html", "/Signup.html", "/order-tracking.html",
-                                "/Order-Summary", "/products.html", "/Signup", "/address", "/order-tracking",
-                                "/Order-successful", "/Wishlist.html", "/home.html", "/login.html", "/products-detail.html")
-                        .permitAll()
-                        .requestMatchers("/static/**", "/images/**", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/api/auth/**", "/api/users/register").permitAll()
+                        // Allow all preflight requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Static pages
+                        .requestMatchers(
+                                "/", "/home", "/products", "/products-detail", "/cart",
+                                "/checkout", "/orders", "/address", "/order-tracking",
+                                "/Order-successful", "/Order-Summary", "/forgot-password",
+                                "/reset-password", "/Signup", "/login"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/*.html", "/static/**", "/images/**", "/css/**", "/js/**"
+                        ).permitAll()
+
+                        // Public API
+                        .requestMatchers("/api/auth/**", "/api/users/register", "/api/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
+
+                        // Protected API
                         .requestMatchers("/api/cart/**").authenticated()
                         .requestMatchers("/api/wishlist/**").authenticated()
                         .requestMatchers("/api/orders/**").authenticated()
@@ -51,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/address/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/reviews/**").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -67,20 +75,41 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    /**
+     * Single CORS configuration source.
+     * DELETE any separate CorsConfig.java — having two CORS beans causes conflicts.
+     *
+     * Uses setAllowedOriginPatterns() (not setAllowedOrigins()) so that
+     * wildcard subdomains like *.vercel.app are matched correctly.
+     *
+     * allowCredentials is false because this app uses JWT in the Authorization
+     * header, not HttpOnly cookies. Setting it true with wildcard origins
+     * violates the CORS spec and breaks browsers.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
+
+        config.setAllowedOriginPatterns(List.of(
                 "https://depra-ecom.onrender.com",
-                "https://ecommerce-fullstack-application-dep.vercel.app",
-                "https://*.vercel.app",
+                "https://depra-ecom.vercel.app",   // update to your prod Vercel domain
+                "https://*.vercel.app",             // all preview deployments
                 "http://localhost:3000",
-                "http://localhost:8080"
+                "http://localhost:8080",
+                "http://127.0.0.1:5500",
+                "http://127.0.0.1:3000"
         ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-        config.setExposedHeaders(List.of("Authorization"));
+
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
+
+        config.setAllowedHeaders(List.of(
+                "Authorization", "Content-Type", "Accept",
+                "Origin", "X-Requested-With", "Cache-Control", "Pragma"
+        ));
+
+        config.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
+        config.setAllowCredentials(false);
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
