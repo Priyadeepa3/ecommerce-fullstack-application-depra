@@ -102,6 +102,11 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://localhost:8080")); // your frontend origin
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
+        config.setAllowedOrigins(List.of(
+                "https://depra-ecom.onrender.com",
+                "https://ecommerce-fullstack-application-depra.vercel.app",
+                "http://localhost:8080"
+        ));
         config.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
