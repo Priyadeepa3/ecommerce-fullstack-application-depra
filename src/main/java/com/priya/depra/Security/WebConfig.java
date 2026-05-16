@@ -1,38 +1,46 @@
 package com.priya.depra.Security;
 
-
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    /**
+     * Map clean URLs to static HTML files using redirect.
+     * DO NOT use "forward:/" with Thymeleaf removed — it causes
+     * TemplateInputException and crashes the server.
+     * These redirects let browser bookmarks like /home work.
+     */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Home & static pages
-        registry.addViewController("/").setViewName("forward:/home.html");
-        registry.addViewController("/home").setViewName("forward:/home.html");
-        registry.addViewController("/products").setViewName("forward:/products.html");
-        registry.addViewController("/products-detail").setViewName("forward:/products-detail.html");
-        registry.addViewController("/cart").setViewName("forward:/cart.html");
-        registry.addViewController("/checkout").setViewName("forward:/checkout.html");
-        registry.addViewController("/forgot-password").setViewName("forward:/forgotPassword.html");
-        registry.addViewController("/reset-password").setViewName("forward:/resetPassword.html");
+        registry.addRedirectViewController("/", "/home.html");
+        registry.addRedirectViewController("/home", "/home.html");
+        registry.addRedirectViewController("/products", "/products.html");
+        registry.addRedirectViewController("/products-detail", "/products-detail.html");
+        registry.addRedirectViewController("/cart", "/cart.html");
+        registry.addRedirectViewController("/checkout", "/checkout.html");
+        registry.addRedirectViewController("/orders", "/orders.html");
+        registry.addRedirectViewController("/address", "/address.html");
+        registry.addRedirectViewController("/order-tracking", "/order-tracking.html");
+        registry.addRedirectViewController("/Order-successful", "/Order-successful.html");
+        registry.addRedirectViewController("/Order-Summary", "/Order-Summary.html");
+        registry.addRedirectViewController("/forgot-password", "/forgotPassword.html");
+        registry.addRedirectViewController("/reset-password", "/resetPassword.html");
+        registry.addRedirectViewController("/Signup", "/Signup.html");
+        registry.addRedirectViewController("/login", "/login.html");
+    }
 
-        // ✅ FIXED: orders page (list of user orders)
-        registry.addViewController("/orders").setViewName("forward:/orders.html");
-
-        // Address page
-        registry.addViewController("/address").setViewName("forward:/address.html");
-
-        // Order tracking
-        registry.addViewController("/order-tracking").setViewName("forward:/order-tracking.html");
-
-        // Order success (keep as is)
-        registry.addViewController("/Order-successful").setViewName("forward:/Order-successful.html");
-
-        // Order success (keep as is)
-        registry.addViewController("/Order-Summary").setViewName("forward:/Order-Summary.html");
+    /**
+     * Explicitly serve static resources from /static/.
+     * Spring Boot does this by default, but being explicit avoids
+     * any ordering conflict with the security filter chain.
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/");
     }
 }

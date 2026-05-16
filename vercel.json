@@ -1,0 +1,22 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "routes": [
+    { "src": "/", "dest": "/home.html" },
+    { "src": "/home", "dest": "/home.html" },
+    { "src": "/login", "dest": "/login.html" },
+    { "src": "/signup", "dest": "/Signup.html" },
+    { "src": "/products", "dest": "/products.html" },
+    { "src": "/products-detail", "dest": "/products-detail.html" },
+    { "src": "/cart", "dest": "/cart.html" },
+    { "src": "/wishlist", "dest": "/Wishlist.html" },
+    { "src": "/checkout", "dest": "/checkout.html" },
+    { "src": "/orders", "dest": "/orders.html" },
+    { "src": "/order-tracking", "dest": "/order-tracking.html" },
+    { "src": "/order-summary", "dest": "/Order-Summary.html" },
+    { "src": "/address", "dest": "/address.html" },
+    { "src": "/forgot-password", "dest": "/forgotPassword.html" },
+    { "src": "/reset-password", "dest": "/resetPassword.html" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}
