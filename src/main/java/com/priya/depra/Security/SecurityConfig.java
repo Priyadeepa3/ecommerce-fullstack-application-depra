@@ -92,7 +92,7 @@ public class SecurityConfig {
 
         config.setAllowedOriginPatterns(List.of(
                 "https://depra-ecom.onrender.com",
-                "https://depra-ecom.vercel.app",   // update to your prod Vercel domain
+                "https://ecommerce-fullstack-application-depra-p4kuy49b5.vercel.app/",   // update to your prod Vercel domain
                 "https://*.vercel.app",             // all preview deployments
                 "http://localhost:3000",
                 "http://localhost:8080",
